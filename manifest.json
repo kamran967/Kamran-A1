@@ -1,11 +1,1 @@
-{
-  "name": "Kamran A1",
-  "short_name": "Kamran A1",
-  "start_url": "./index.html",
-  "display": "standalone",
-  "background_color": "#0b1220",
-  "theme_color": "#0b1220",
-  "lang": "ur",
-  "dir": "rtl",
-  "icons": []
-}
+{"name": "Kamran A1 V2", "short_name": "Kamran A1", "start_url": ".", "display": "standalone", "background_color": "#07101d", "theme_color": "#0b1220", "lang": "ur", "dir": "rtl"}

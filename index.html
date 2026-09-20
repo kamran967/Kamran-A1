@@ -1,276 +1,45 @@
-<!doctype html>
-<html lang="ur" dir="rtl">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#0b1220">
-  <link rel="manifest" href="manifest.json">
-  <title>Kamran A1</title>
-  <style>
-    *{box-sizing:border-box}
-    body{margin:0;background:#0b1220;color:#eef2ff;font-family:system-ui,-apple-system,"Noto Nastaliq Urdu","Noto Sans Arabic",sans-serif}
-    .app{max-width:720px;margin:auto;min-height:100vh;display:flex;flex-direction:column}
-    header{padding:18px 16px 12px;border-bottom:1px solid #243047;background:#10192b;position:sticky;top:0;z-index:2}
-    h1{font-size:24px;margin:0 0 4px}
-    .sub{font-size:13px;color:#aab5cc}
-    #status{font-size:12px;color:#8ee6b1;margin-top:7px}
-    #chat{flex:1;padding:16px 12px 120px;overflow:auto}
-    .msg{max-width:88%;padding:11px 13px;border-radius:16px;margin:8px 0;line-height:1.65;white-space:pre-wrap;word-break:break-word}
-    .user{margin-right:auto;background:#1d4ed8}
-    .bot{margin-left:auto;background:#182338;border:1px solid #2a3954}
-    .time{display:block;font-size:10px;opacity:.55;margin-top:3px}
-    .composer{position:fixed;bottom:0;left:0;right:0;background:#0e1728;border-top:1px solid #243047;padding:10px;z-index:3}
-    .composer-inner{max-width:720px;margin:auto;display:flex;gap:8px;align-items:center}
-    #messageInput{flex:1;min-width:0;background:#162239;color:#fff;border:1px solid #30415e;border-radius:14px;padding:12px;font-size:16px;outline:none}
-    button{border:0;border-radius:13px;padding:12px 14px;font-size:18px;cursor:pointer}
-    #sendBtn{background:#2563eb;color:white}
-    #micBtn{background:#16a34a;color:white}
-    #micBtn.listening{background:#dc2626}
-    button:disabled{opacity:.45;cursor:not-allowed}
-    .hint{font-size:11px;color:#91a0bb;text-align:center;margin-top:6px}
-  </style>
-</head>
-<body>
-<div class="app">
-  <header>
-    <h1>🤖 Kamran A1</h1>
-    <div class="sub">آپ کا موبائل AI اسسٹنٹ — Text + Voice + Memory</div>
-    <div id="status">تیار ہے۔ میسج لکھیں اور Send دبائیں۔</div>
-  </header>
-
-  <main id="chat"></main>
-
-  <div class="composer">
-    <form id="chatForm" class="composer-inner" autocomplete="off">
-      <input id="messageInput" type="text" inputmode="text"
-             placeholder="اپنا پیغام لکھیں..." aria-label="پیغام">
-      <button id="micBtn" type="button" aria-label="Voice">🎙️</button>
-      <button id="sendBtn" type="submit" aria-label="Send">➤</button>
-    </form>
-    <div class="hint">Enter سے بھی میسج بھیجا جا سکتا ہے۔ 🎙️ کے لیے Chrome کو microphone اجازت دیں۔</div>
-  </div>
-</div>
-
+<!doctype html><html lang="ur" dir="rtl"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b1220"><link rel="manifest" href="manifest.json">
+<title>Kamran A1 V2</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#07101d;color:#eef4ff;font-family:system-ui,"Noto Sans Arabic",sans-serif}
+header{text-align:center;padding:22px 16px;background:#101a2e;border-bottom:1px solid #263654}h1{margin:0;font-size:30px}
+.sub{color:#aebbd1;margin:6px}.status{color:#78e0a1;font-size:14px}.chat{height:calc(100vh - 245px);overflow:auto;padding:18px;display:flex;flex-direction:column;gap:12px}
+.msg{max-width:88%;padding:14px 16px;border-radius:20px;line-height:1.75;white-space:pre-wrap}.user{align-self:flex-start;background:#2257d9}.bot{align-self:flex-end;background:#18263e;border:1px solid #2d405f}
+.time{font-size:11px;opacity:.5}.bar{position:fixed;bottom:0;left:0;right:0;background:#0c1525;border-top:1px solid #263654;padding:10px;display:flex;gap:8px}
+input{flex:1;background:#17243a;color:white;border:1px solid #314564;border-radius:20px;padding:14px;font-size:16px}button{border:0;border-radius:16px;color:white;font-size:22px;width:58px;height:58px}
+#send{background:#2563eb}#mic{background:#16a34a}#settings{position:fixed;top:12px;left:12px;width:44px;height:44px;background:#22324e}
+.panel{display:none;position:fixed;z-index:5;left:10px;right:10px;bottom:80px;background:#101b2e;border:1px solid #334968;border-radius:18px;padding:14px}
+.panel input{width:100%;margin:8px 0}.panel button{width:48%;height:45px;font-size:15px}
+</style></head><body>
+<header><button id="settings" type="button">⚙️</button><h1>Kamran A1 🤖</h1>
+<div class="sub">Real AI Brain V2 • Text + Voice + Memory</div><div id="status" class="status">تیار ہے</div></header>
+<div id="chat" class="chat"></div>
+<div id="panel" class="panel"><b>AI Brain کنکشن</b><p>اپنے محفوظ backend/Worker کا URL یہاں ڈالیں۔ API key یہاں نہ ڈالیں۔</p>
+<input id="url" placeholder="https://your-worker.workers.dev"><br>
+<button id="save" type="button">محفوظ کریں</button> <button id="clear" type="button">Memory صاف</button></div>
+<form id="form" class="bar"><button id="mic" type="button">🎙️</button><input id="msg" placeholder="اپنا پیغام لکھیں..." autocomplete="off"><button id="send" type="submit">➤</button></form>
 <script>
-(function(){
-  "use strict";
-
-  const chat = document.getElementById("chat");
-  const form = document.getElementById("chatForm");
-  const input = document.getElementById("messageInput");
-  const sendBtn = document.getElementById("sendBtn");
-  const micBtn = document.getElementById("micBtn");
-  const status = document.getElementById("status");
-
-  const MEMORY_KEY = "kamranA1MemoryV2";
-  let memory = {name:"", notes:[]};
-
-  function loadMemory(){
-    try{
-      const raw = localStorage.getItem(MEMORY_KEY);
-      if(raw) memory = Object.assign(memory, JSON.parse(raw));
-    }catch(e){}
-  }
-
-  function saveMemory(){
-    try{ localStorage.setItem(MEMORY_KEY, JSON.stringify(memory)); }catch(e){}
-  }
-
-  function setStatus(text, ok=true){
-    status.textContent = text;
-    status.style.color = ok ? "#8ee6b1" : "#ffb4b4";
-  }
-
-  function addMessage(text, who){
-    const box = document.createElement("div");
-    box.className = "msg " + (who === "user" ? "user" : "bot");
-    box.textContent = text;
-    const t = document.createElement("span");
-    t.className = "time";
-    t.textContent = new Date().toLocaleTimeString("ur-PK",{hour:"2-digit",minute:"2-digit"});
-    box.appendChild(t);
-    chat.appendChild(box);
-    chat.scrollTop = chat.scrollHeight;
-  }
-
-  function speak(text){
-    if(!("speechSynthesis" in window)) return;
-    try{
-      speechSynthesis.cancel();
-      const u = new SpeechSynthesisUtterance(text);
-      u.lang = "ur-PK";
-      u.rate = 0.95;
-      speechSynthesis.speak(u);
-    }catch(e){}
-  }
-
-  function botReply(text){
-    const t = text.trim();
-    const low = t.toLowerCase();
-
-    if(/^سلام|^السلام علیکم/.test(t)){
-      return "وعلیکم السلام، کامران! میں Kamran A1 ہوں۔ آپ کیا کام کرنا چاہتے ہیں؟";
-    }
-
-    if(t.includes("میرا نام")){
-      const m = t.match(/میرا نام\s*(?:ہے|:)?\s*(.+)/);
-      if(m && m[1].trim()){
-        memory.name = m[1].trim().replace(/[۔.]+$/,"");
-        saveMemory();
-        return "ٹھیک ہے، میں نے آپ کا نام یاد رکھ لیا: " + memory.name;
-      }
-    }
-
-    if(t.startsWith("یاد رکھو") || t.startsWith("یاد رکھنا")){
-      const note = t.replace(/^یاد رکھو[:：]?\s*/,"").replace(/^یاد رکھنا[:：]?\s*/,"").trim();
-      if(note){
-        memory.notes.push(note);
-        saveMemory();
-        return "ٹھیک ہے، یہ بات میں نے اس موبائل میں محفوظ کر لی ہے۔";
-      }
-      return "ضرور۔ 'یاد رکھو: ...' کے بعد وہ بات لکھیں جو آپ محفوظ کرنا چاہتے ہیں۔";
-    }
-
-    if(t.includes("میری یادداشت") || t.includes("میری میموری") || t.includes("کیا یاد ہے")){
-      const parts = [];
-      if(memory.name) parts.push("نام: " + memory.name);
-      if(memory.notes.length) parts.push("نوٹس:\n- " + memory.notes.join("\n- "));
-      return parts.length ? parts.join("\n") : "ابھی میری مقامی میموری میں کچھ محفوظ نہیں ہے۔";
-    }
-
-    if(t.includes("میموری صاف") || t.includes("یادداشت صاف")){
-      memory = {name:"",notes:[]};
-      saveMemory();
-      return "مقامی میموری صاف کر دی گئی ہے۔";
-    }
-
-    if(t.includes("ہیلو") || t.includes("hello") || t.includes("hi")){
-      return "ہیلو کامران! میں تیار ہوں۔ آپ مجھ سے اردو میں بات کر سکتے ہیں۔";
-    }
-
-    if(t.includes("کون ہو") || t.includes("تم کون")){
-      return "میں Kamran A1 کا موبائل AI پروٹو ٹائپ ہوں۔ اس ورژن میں Text Chat، Voice Input، Voice Reply اور Local Memory موجود ہے۔";
-    }
-
-    if(t.includes("وقت") || t.includes("ٹائم")){
-      return "اس وقت موبائل کا مقامی وقت تقریباً " +
-        new Date().toLocaleTimeString("ur-PK",{hour:"2-digit",minute:"2-digit"}) + " ہے۔";
-    }
-
-    if(t.includes("شکریہ") || t.includes("thank")){
-      return "خوش رہیں کامران۔ میں حاضر ہوں۔";
-    }
-
-    return "میں نے آپ کا میسج وصول کر لیا ہے۔\n\nیہ ابھی Kamran A1 کا موبائل پروٹوٹائپ ہے؛ اس میں مقامی بنیادی Brain چل رہا ہے۔";
-  }
-
-  function sendMessage(text){
-    const clean = String(text || "").trim();
-    if(!clean) return;
-
-    addMessage(clean,"user");
-    input.value = "";
-    sendBtn.disabled = true;
-    setStatus("جواب تیار ہو رہا ہے…");
-
-    setTimeout(function(){
-      const reply = botReply(clean);
-      addMessage(reply,"bot");
-      speak(reply);
-      sendBtn.disabled = false;
-      setStatus("تیار ہے۔");
-      input.focus();
-    },120);
-  }
-
-  form.addEventListener("submit", function(e){
-    e.preventDefault();
-    e.stopPropagation();
-    sendMessage(input.value);
-  });
-
-  input.addEventListener("keydown", function(e){
-    if(e.key === "Enter" && !e.shiftKey){
-      e.preventDefault();
-      form.requestSubmit();
-    }
-  });
-
-  // Voice input
-  const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  let recognition = null;
-  let listening = false;
-
-  if(Recognition){
-    recognition = new Recognition();
-    recognition.lang = "ur-PK";
-    recognition.interimResults = false;
-    recognition.continuous = false;
-    recognition.maxAlternatives = 1;
-
-    recognition.onstart = function(){
-      listening = true;
-      micBtn.classList.add("listening");
-      micBtn.textContent = "⏹️";
-      setStatus("🎙️ سن رہا ہوں… اردو میں بولیں۔");
-    };
-
-    recognition.onresult = function(event){
-      const transcript = event.results[0][0].transcript || "";
-      input.value = transcript;
-      setStatus("آواز موصول ہو گئی۔");
-      sendMessage(transcript);
-    };
-
-    recognition.onerror = function(event){
-      listening = false;
-      micBtn.classList.remove("listening");
-      micBtn.textContent = "🎙️";
-      let msg = "Voice میں مسئلہ آیا۔";
-      if(event.error === "not-allowed" || event.error === "service-not-allowed"){
-        msg = "Microphone اجازت نہیں ملی۔ Chrome میں Microphone اجازت Allow کریں۔";
-      }else if(event.error === "no-speech"){
-        msg = "آواز سنائی نہیں دی۔ دوبارہ بولیں۔";
-      }else if(event.error === "network"){
-        msg = "Voice recognition کے لیے Chrome/Internet service دستیاب نہیں۔";
-      }
-      setStatus(msg,false);
-    };
-
-    recognition.onend = function(){
-      listening = false;
-      micBtn.classList.remove("listening");
-      micBtn.textContent = "🎙️";
-      if(status.textContent.includes("سن رہا ہوں")) setStatus("تیار ہے۔");
-    };
-
-    micBtn.addEventListener("click", function(){
-      if(listening){
-        try{ recognition.stop(); }catch(e){}
-        return;
-      }
-      try{
-        recognition.start();
-      }catch(e){
-        setStatus("Voice دوبارہ شروع کرنے سے پہلے ایک لمحہ انتظار کریں۔",false);
-      }
-    });
-  }else{
-    micBtn.disabled = true;
-    micBtn.title = "Speech Recognition دستیاب نہیں";
-    setStatus("Text Chat تیار ہے۔ اس Chrome میں Voice Recognition دستیاب نہیں۔",false);
-  }
-
-  loadMemory();
-
-  addMessage("السلام علیکم کامران! 👋\nمیں Kamran A1 ہوں۔\n\nپہلے Text Message بھیج کر دیکھیں۔ پھر 🎙️ دباکر Voice آزمائیں۔","bot");
-
-  if(memory.name){
-    addMessage("آپ کا نام میری مقامی میموری میں محفوظ ہے: " + memory.name,"bot");
-  }
-
-  input.focus();
-})();
-</script>
-</body>
-</html>
+const chat=document.getElementById("chat"),form=document.getElementById("form"),msg=document.getElementById("msg"),status=document.getElementById("status");
+let mem=JSON.parse(localStorage.getItem("kamranA1MemoryV2")||"[]"); const key="kamranA1ApiUrlV2";
+document.getElementById("url").value=localStorage.getItem(key)||"";
+function save(){localStorage.setItem("kamranA1MemoryV2",JSON.stringify(mem))}
+function add(t,c){let b=document.createElement("div");b.className="msg "+c;b.textContent=t;let s=document.createElement("div");s.className="time";s.textContent=new Date().toLocaleTimeString("ur-PK",{hour:"2-digit",minute:"2-digit"});b.appendChild(s);chat.appendChild(b);chat.scrollTop=chat.scrollHeight}
+function speak(t){if(!("speechSynthesis"in window))return;speechSynthesis.cancel();let u=new SpeechSynthesisUtterance(t);u.lang="ur-PK";u.rate=.95;speechSynthesis.speak(u)}
+function local(t){
+ let n=t.match(/(?:میرا نام|میرا نام ہے)\s+(.+)/);if(n){mem=mem.filter(x=>x.type!="name");mem.push({type:"name",value:n[1].trim()});save();return"ٹھیک ہے، میں آپ کا نام یاد رکھوں گا: "+n[1].trim()}
+ if(t.startsWith("یاد رکھو")){let x=t.replace(/^یاد رکھو[:：]?\s*/,"").trim();if(x){mem.push({type:"note",value:x});save();return"ٹھیک ہے، یہ بات Memory میں محفوظ کر لی ہے۔"}}
+ if(/میرا نام کیا ہے/.test(t)){let n=mem.find(x=>x.type=="name");return n?"آپ کا نام "+n.value+" ہے۔":"آپ کا نام ابھی Memory میں نہیں ہے۔"} return null
+}
+async function ask(t){let u=(localStorage.getItem(key)||"").replace(/\/$/,"");if(!u)return"AI Brain ابھی connect نہیں ہوا۔ ⚙️ دبائیں اور Worker URL محفوظ کریں۔";
+let r=await fetch(u+"/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message:t,memory:mem.slice(-12)})});
+let d=await r.json().catch(()=>({}));if(!r.ok)throw Error(d.error||("Server error "+r.status));return d.reply||"جواب نہیں ملا۔"}
+async function send(t){t=t.trim();if(!t)return;add(t,"user");msg.value="";status.textContent="AI سوچ رہا ہے…";let x=local(t);if(x){add(x,"bot");speak(x);status.textContent="تیار ہے";return}try{let x=await ask(t);add(x,"bot");speak(x);status.textContent="تیار ہے"}catch(e){add("AI سے رابطہ نہیں ہو سکا۔ ⚠️\n"+e.message,"bot");status.textContent="کنکشن چیک کریں"}}
+form.onsubmit=e=>{e.preventDefault();send(msg.value)}
+document.getElementById("settings").onclick=()=>{let p=document.getElementById("panel");p.style.display=p.style.display=="block"?"none":"block"}
+document.getElementById("save").onclick=()=>{localStorage.setItem(key,document.getElementById("url").value.trim().replace(/\/$/,""));document.getElementById("panel").style.display="none";status.textContent="AI Brain URL محفوظ ہے۔"}
+document.getElementById("clear").onclick=()=>{mem=[];save();add("Memory صاف کر دی گئی ہے۔","bot")}
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){document.getElementById("mic").disabled=true;status.textContent="Text تیار ہے؛ Voice browser support پر منحصر ہے"}else{let r=new SR();r.lang="ur-PK";r.interimResults=false;r.continuous=false;r.onstart=()=>{status.textContent="سن رہا ہوں… بولیں 🎙️";document.getElementById("mic").textContent="⏹️"};r.onresult=e=>{let t=e.results[0][0].transcript;msg.value=t;send(t)};r.onerror=e=>{status.textContent=e.error=="not-allowed"?"Microphone permission Allow کریں":"Voice error: "+e.error};r.onend=()=>{document.getElementById("mic").textContent="🎙️"};document.getElementById("mic").onclick=()=>{try{r.start()}catch(e){}}}
+add("السلام علیکم کامران! 👋\nمیں Kamran A1 V2 ہوں۔ اب Real AI Brain کو محفوظ backend کے ذریعے connect کیا جائے گا۔","bot");
+</script></body></html>

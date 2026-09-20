@@ -1,22 +1,13 @@
-Kamran A1 Mobile Fixed — اردو ہدایات
+Kamran A1 V2 — Real AI Brain
 
-1) ZIP extract کریں۔
-2) index.html کو Chrome میں کھولیں۔
-3) Text box میں "السلام علیکم" لکھ کر ➤ دبائیں۔
-4) Enter دبانے سے بھی message send ہوگا۔
-5) 🎙️ دبائیں اور Microphone permission آئے تو Allow کریں۔
+Files:
+- index.html = GitHub Pages mobile app
+- manifest.json = install/PWA info
+- worker.js = secure AI backend
 
-اہم:
-- Text Chat اب local HTML پر بھی چلنا چاہیے۔
-- Voice Input browser کے Speech Recognition پر depend کرتا ہے۔
-- اگر Chrome اس local file میں Voice نہ چلائے تو یہ browser/security limitation ہے؛ Voice کو reliable بنانے کے لیے Kamran A1 کو HTTPS web address پر چلانا ہوگا۔
-- Voice Reply کے لیے phone میں speech synthesis available ہونا ضروری ہے۔
-- Memory اسی browser میں localStorage میں محفوظ ہوتی ہے۔
+اہم: OpenAI API key کو index.html میں نہ ڈالیں۔ worker.js کو Cloudflare Worker میں deploy کریں اور OPENAI_API_KEY کو Secret کے طور پر رکھیں۔ پھر Worker URL کو Kamran A1 میں ⚙️ Settings میں ڈالیں۔
 
-Memory commands:
-• "میرا نام محمد کامران ہے"
-• "یاد رکھو: میں Jahania میں رہتا ہوں"
-• "میری یادداشت کیا ہے؟"
-• "میموری صاف کرو"
+Model: gpt-5.6-luna
+Optional Worker variable: ALLOWED_ORIGIN = آپ کے GitHub Pages کا URL
 
-یہ ابھی prototype ہے، مکمل cloud AI/ChatGPT brain نہیں۔
+Voice V1 کی طرح browser Speech Recognition پر چلتی ہے۔
