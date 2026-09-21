@@ -1,78 +1,3 @@
-<!DOCTYPE html>
-<html lang="ur" dir="rtl">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-
-<title>Kamran A1</title>
-
-<style>
-*{
-  box-sizing:border-box;
-}
-
-body{
-  margin:0;
-  font-family:Arial,sans-serif;
-  background:#080b12;
-  color:white;
-}
-
-header{
-  padding:18px;
-  text-align:center;
-  font-size:25px;
-  font-weight:bold;
-  border-bottom:1px solid #222;
-}
-
-#status{
-  text-align:center;
-  color:#8aa0b8;
-  padding:8px;
-  font-size:14px;
-}
-
-#wakeStatus{
-  text-align:center;
-  color:#22c55e;
-  font-size:13px;
-  padding-bottom:6px;
-}
-
-#chat{
-  height:calc(100vh - 220px);
-  overflow-y:auto;
-  padding:15px;
-}
-
-.msg{
-  max-width:85%;
-  padding:12px 15px;
-  margin:10px 0;
-  border-radius:15px;
-  white-space:pre-wrap;
-  line-height:1.6;
-}
-
-.user{
-  background:#164e63;
-  margin-right:auto;
-}
-
-.bot{
-  background:#1e293b;
-  margin-left:auto;
-}
-
-.bottom{
-  position:fixed;
-  bottom:0;
-  left:0;
-  right:0;
-  padding:10px;
-  background:#0d111a;
-  display:flex;
   gap:6px;
 }
 
@@ -742,98 +667,146 @@ async function send(){
      Local command
   */
 
-  const local =
-    localCommand(text);
+  function localCommand(text){
+
+  const clean = text
+    .trim()
+    .replace(/[۔؟?.,،]/g, "")
+    .replace(/\s+/g, " ");
+
+  const lower = clean.toLowerCase();
 
 
-  if(local){
+  /* =========================
+     NAME QUESTION
+  ========================= */
 
-    add(
-      local,
-      "bot"
-    );
+  if(
+    clean.includes("میرا نام") &&
+    (
+      clean.includes("کیا ہے") ||
+      clean.includes("کون ہے") ||
+      clean.includes("بتاؤ") ||
+      clean.includes("بتاو")
+    )
+  ){
 
-    speak(
-      local,
-      afterAssistantSpeech
-    );
-
-    return;
-  }
-
-
-  status.textContent =
-    "AI سوچ رہا ہے…";
-
-
-  try{
-
-    const reply =
-      await ask(text);
-
-
-    history.push({
-      role:"user",
-      content:text
-    });
-
-
-    history.push({
-      role:"assistant",
-      content:reply
-    });
-
-
-    add(
-      reply,
-      "bot"
-    );
-
-
-    /*
-       AI جواب مکمل بولنے کے بعد
-       Wake Mode واپس شروع ہوگا
-    */
-
-    speak(
-      reply,
-      afterAssistantSpeech
-    );
-
-
-    status.textContent =
-      "تیار ہے";
-
-
-  }catch(error){
-
-    add(
-      "AI سے رابطہ نہیں ہو سکا۔ ⚠️\n"
-      + error.message,
-      "bot"
-    );
-
-
-    status.textContent =
-      "Connection check کریں";
-
-
-    /*
-       Error کے بعد بھی Wake Mode واپس لائیں
-    */
-
-    if(wakeMode){
-
-      setTimeout(
-        afterAssistantSpeech,
-        500
+    const name =
+      mem.find(
+        x => x.type === "name"
       );
+
+    if(name && name.value){
+
+      return "آپ کا نام " + name.value + " ہے۔";
 
     }
 
+    return "آپ کا نام ابھی Memory میں محفوظ نہیں ہے۔";
   }
-}
 
+
+  /* =========================
+     NAME SAVE
+  ========================= */
+
+  if(
+    clean.includes("میرا نام")
+  ){
+
+    let name = "";
+
+    /*
+      "میرا نام کامران ہے"
+    */
+
+    let match =
+      clean.match(
+        /میرا نام\s+(.+?)(?:\s+ہے)?$/i
+      );
+
+    if(match){
+      name = match[1].trim();
+    }
+
+
+    /*
+      اضافی الفاظ صاف کریں
+    */
+
+    name =
+      name
+        .replace(
+          /^(ہے|ہوں|سیو کرلو|save کرلو|یاد رکھو|یاد کرلو)\s*/i,
+          ""
+        )
+        .trim();
+
+
+    /*
+      اگر نام مل گیا
+    */
+
+    if(
+      name &&
+      name !== "کیا ہے" &&
+      name !== "کون ہے"
+    ){
+
+      mem =
+        mem.filter(
+          x => x.type !== "name"
+        );
+
+      mem.push({
+        type:"name",
+        value:name
+      });
+
+      saveMemory();
+
+      return (
+        "ٹھیک ہے، میں آپ کا نام یاد رکھوں گا: "
+        + name
+      );
+    }
+  }
+
+
+  /* =========================
+     GENERAL MEMORY
+  ========================= */
+
+  if(
+    clean.startsWith("یاد رکھو")
+  ){
+
+    const value =
+      clean
+        .replace(
+          /^یاد رکھو[:：]?\s*/,
+          ""
+        )
+        .trim();
+
+    if(value){
+
+      mem.push({
+        type:"note",
+        value:value
+      });
+
+      saveMemory();
+
+      return "ٹھیک ہے، یہ بات Memory میں محفوظ کر لی ہے۔";
+    }
+  }
+
+
+  return null;
+}
+      
+  
 
 /* =========================
    ENTER
