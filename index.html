@@ -1,148 +1,134 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ur" dir="rtl">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#0b1220">
-<link rel="manifest" href="manifest.json">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 
-<title>Kamran A1 V2</title>
+<title>Kamran A1</title>
 
 <style>
-*{box-sizing:border-box}
+*{
+  box-sizing:border-box;
+}
 
 body{
   margin:0;
-  background:#07101d;
-  color:#eef4ff;
-  font-family:system-ui,"Noto Sans Arabic",sans-serif
+  font-family:Arial,sans-serif;
+  background:#080b12;
+  color:white;
 }
 
 header{
-  text-align:center;
-  padding:22px 16px;
-  background:#101a2e;
-  border-bottom:1px solid #263654
-}
-
-h1{
-  margin:0;
-  font-size:30px
-}
-
-.sub{
-  color:#aebbd1;
-  margin:6px
-}
-
-.status{
-  color:#78e0a1;
-  font-size:14px
-}
-
-.chat{
-  height:calc(100vh - 245px);
-  overflow:auto;
   padding:18px;
-  display:flex;
-  flex-direction:column;
-  gap:12px
+  text-align:center;
+  font-size:25px;
+  font-weight:bold;
+  border-bottom:1px solid #222;
+}
+
+#status{
+  text-align:center;
+  color:#8aa0b8;
+  padding:8px;
+  font-size:14px;
+}
+
+#chat{
+  height:calc(100vh - 190px);
+  overflow-y:auto;
+  padding:15px;
 }
 
 .msg{
-  max-width:88%;
-  padding:14px 16px;
-  border-radius:20px;
-  line-height:1.75;
-  white-space:pre-wrap
+  max-width:85%;
+  padding:12px 15px;
+  margin:10px 0;
+  border-radius:15px;
+  white-space:pre-wrap;
+  line-height:1.6;
 }
 
 .user{
-  align-self:flex-start;
-  background:#2257d9
+  background:#164e63;
+  margin-right:auto;
 }
 
 .bot{
-  align-self:flex-end;
-  background:#18263e;
-  border:1px solid #2d405f
+  background:#1e293b;
+  margin-left:auto;
 }
 
-.time{
-  font-size:11px;
-  opacity:.5
-}
-
-.bar{
+.bottom{
   position:fixed;
   bottom:0;
   left:0;
   right:0;
-  background:#0c1525;
-  border-top:1px solid #263654;
   padding:10px;
+  background:#0d111a;
   display:flex;
-  gap:8px
+  gap:7px;
 }
 
 input{
   flex:1;
-  background:#17243a;
+  padding:13px;
+  border-radius:12px;
+  border:1px solid #334155;
+  background:#111827;
   color:white;
-  border:1px solid #314564;
-  border-radius:20px;
-  padding:14px;
-  font-size:16px
+  font-size:16px;
 }
 
 button{
   border:0;
-  border-radius:16px;
+  border-radius:12px;
+  padding:12px 15px;
+  background:#2563eb;
   color:white;
-  font-size:22px;
-  width:58px;
-  height:58px
+  font-size:16px;
+  cursor:pointer;
 }
 
-#send{
-  background:#2563eb
+button:active{
+  transform:scale(.96);
 }
 
 #mic{
-  background:#16a34a
+  background:#16a34a;
 }
 
 #settings{
   position:fixed;
-  top:12px;
-  left:12px;
-  width:44px;
-  height:44px;
-  background:#22324e
-}
-
-.panel{
-  display:none;
-  position:fixed;
-  z-index:5;
-  left:10px;
+  top:65px;
   right:10px;
-  bottom:80px;
-  background:#101b2e;
-  border:1px solid #334968;
-  border-radius:18px;
-  padding:14px
+  left:10px;
+  background:#111827;
+  border:1px solid #334155;
+  border-radius:15px;
+  padding:15px;
+  display:none;
+  z-index:10;
 }
 
-.panel input{
+#settings h3{
+  margin-top:0;
+}
+
+#settings input{
   width:100%;
-  margin:8px 0
+  margin-bottom:10px;
 }
 
-.panel button{
-  width:48%;
-  height:45px;
-  font-size:15px
+.smallBtn{
+  margin-top:5px;
+  background:#475569;
+}
+
+#wake{
+  color:#22c55e;
+  font-size:13px;
+  text-align:center;
+  padding-bottom:5px;
 }
 </style>
 </head>
@@ -150,145 +136,179 @@ button{
 <body>
 
 <header>
-<button id="settings" type="button">⚙️</button>
-
-<h1>Kamran A1 🤖</h1>
-
-<div class="sub">
-Real AI Brain V2 • Text + Voice + Memory
-</div>
-
-<div id="status" class="status">
-تیار ہے
-</div>
+  Kamran A1 🤖
+  <button onclick="toggleSettings()" style="float:left;background:#334155;padding:7px 10px;">
+    ⚙️
+  </button>
 </header>
 
-<div id="chat" class="chat"></div>
+<div id="status">تیار ہے</div>
 
-<div id="panel" class="panel">
-
-<b>AI Brain کنکشن</b>
-
-<p>
-اپنے محفوظ backend/Worker کا URL یہاں ڈالیں۔
-API key یہاں نہ ڈالیں۔
-</p>
-
-<input
-id="url"
-placeholder="https://your-worker.workers.dev"
->
-
-<br>
-
-<button id="save" type="button">
-محفوظ کریں
-</button>
-
-<button id="clear" type="button">
-Memory صاف
-</button>
-
+<div id="wake">
+  Wake Word: "Kamran"
 </div>
 
-<form id="form" class="bar">
+<div id="chat"></div>
 
-<button id="mic" type="button">
-🎙️
-</button>
+<div class="bottom">
+  <input id="msg" placeholder="اپنا پیغام لکھیں..." autocomplete="off">
 
-<input
-id="msg"
-placeholder="اپنا پیغام لکھیں..."
-autocomplete="off"
->
+  <button id="mic" onclick="startListening()">
+    🎙️
+  </button>
 
-<button id="send" type="submit">
-➤
-</button>
+  <button onclick="send()">
+    ➤
+  </button>
+</div>
 
-</form>
+<div id="settings">
+
+  <h3>⚙️ Kamran A1 Settings</h3>
+
+  <label>Worker URL</label>
+
+  <input
+    id="workerUrl"
+    placeholder="https://your-worker.workers.dev"
+  >
+
+  <button onclick="saveSettings()">
+    💾 Save
+  </button>
+
+  <button class="smallBtn" onclick="clearMemory()">
+    🧠 Clear Memory
+  </button>
+
+  <button class="smallBtn" onclick="toggleSettings()">
+    بند کریں
+  </button>
+
+</div>
 
 <script>
 
-const chat = document.getElementById("chat");
-const form = document.getElementById("form");
-const msg = document.getElementById("msg");
-const status = document.getElementById("status");
+const key = "kamran_a1_worker";
 
-let mem = JSON.parse(
-  localStorage.getItem("kamranA1MemoryV2") || "[]"
-);
+let mem =
+  JSON.parse(
+    localStorage.getItem("kamran_memory") || "[]"
+  );
 
 let history = [];
 
-const key = "kamranA1ApiUrlV2";
+const chat =
+  document.getElementById("chat");
 
-document.getElementById("url").value =
+const msg =
+  document.getElementById("msg");
+
+const status =
+  document.getElementById("status");
+
+const workerUrl =
+  document.getElementById("workerUrl");
+
+let recognition = null;
+
+let listening = false;
+
+
+/* =========================
+   SETTINGS
+========================= */
+
+workerUrl.value =
   localStorage.getItem(key) || "";
 
+
+function toggleSettings(){
+
+  const box =
+    document.getElementById("settings");
+
+  box.style.display =
+    box.style.display === "block"
+    ? "none"
+    : "block";
+}
+
+
+function saveSettings(){
+
+  let url =
+    workerUrl.value.trim();
+
+  url =
+    url.replace(/\/$/,"");
+
+  localStorage.setItem(key,url);
+
+  status.textContent =
+    "Worker URL محفوظ ہو گیا ✅";
+
+  setTimeout(()=>{
+    status.textContent="تیار ہے";
+  },1500);
+}
+
+
+/* =========================
+   MEMORY
+========================= */
 
 function saveMemory(){
 
   localStorage.setItem(
-    "kamranA1MemoryV2",
+    "kamran_memory",
     JSON.stringify(mem)
   );
-
 }
 
 
-function add(text, cls){
+function clearMemory(){
 
-  const box = document.createElement("div");
+  mem=[];
 
-  box.className = "msg " + cls;
+  saveMemory();
 
-  box.textContent = text;
-
-  const time = document.createElement("div");
-
-  time.className = "time";
-
-  time.textContent =
-    new Date().toLocaleTimeString(
-      "ur-PK",
-      {
-        hour:"2-digit",
-        minute:"2-digit"
-      }
-    );
-
-  box.appendChild(time);
-
-  chat.appendChild(box);
-
-  chat.scrollTop = chat.scrollHeight;
-
+  add(
+    "Memory صاف کر دی گئی ہے۔ 🧠",
+    "bot"
+  );
 }
 
 
-function speak(text){
+/* =========================
+   CHAT UI
+========================= */
 
-  if(!("speechSynthesis" in window)) return;
+function add(text,type){
 
-  speechSynthesis.cancel();
+  const div =
+    document.createElement("div");
 
-  const utterance =
-    new SpeechSynthesisUtterance(text);
+  div.className =
+    "msg " + type;
 
-  utterance.lang = "ur-PK";
+  div.textContent = text;
 
-  utterance.rate = 0.95;
+  chat.appendChild(div);
 
-  speechSynthesis.speak(utterance);
-
+  chat.scrollTop =
+    chat.scrollHeight;
 }
 
+
+/* =========================
+   LOCAL COMMANDS
+========================= */
 
 function localCommand(text){
 
-  // پہلے نام پوچھنے والا سوال check کریں
+  /* نام پوچھنا */
+
   if(/میرا نام کیا ہے/.test(text)){
 
     const name =
@@ -300,7 +320,8 @@ function localCommand(text){
   }
 
 
-  // نام محفوظ کریں
+  /* نام محفوظ کرنا */
+
   let nameMatch =
     text.match(/^میرا نام(?: ہے)?\s+(.+)$/);
 
@@ -310,7 +331,9 @@ function localCommand(text){
       nameMatch[1].trim();
 
     mem =
-      mem.filter(x => x.type !== "name");
+      mem.filter(
+        x => x.type !== "name"
+      );
 
     mem.push({
       type:"name",
@@ -319,16 +342,23 @@ function localCommand(text){
 
     saveMemory();
 
-    return "ٹھیک ہے، میں آپ کا نام یاد رکھوں گا: " + name;
+    return (
+      "ٹھیک ہے، میں آپ کا نام یاد رکھوں گا: "
+      + name
+    );
   }
 
 
-  // عام Memory
+  /* عام Memory */
+
   if(text.startsWith("یاد رکھو")){
 
     const value =
       text
-        .replace(/^یاد رکھو[:：]?\s*/,"")
+        .replace(
+          /^یاد رکھو[:：]?\s*/,
+          ""
+        )
         .trim();
 
     if(value){
@@ -349,18 +379,21 @@ function localCommand(text){
 }
 
 
+/* =========================
+   AI REQUEST
+========================= */
+
 async function ask(text){
 
-  const baseUrl =
-    (localStorage.getItem(key) || "")
-      .replace(/\/$/,"");
+  let baseUrl =
+    (
+      localStorage.getItem(key) || ""
+    ).replace(/\/$/,"");
 
   if(!baseUrl){
 
     return "AI Brain ابھی connect نہیں ہوا۔ ⚙️ دبائیں اور Worker URL محفوظ کریں۔";
-
   }
-
 
   const response =
     await fetch(
@@ -369,104 +402,90 @@ async function ask(text){
         method:"POST",
 
         headers:{
-          "Content-Type":"application/json"
+          "Content-Type":
+            "application/json"
         },
 
-        body:JSON.stringify({
+        body:
+          JSON.stringify({
 
-          message:text,
+            message:text,
 
-          memory:mem.slice(-12),
+            memory:
+              mem.slice(-12),
 
-          history:history.slice(-20)
+            history:
+              history.slice(-20)
 
-        })
-
+          })
       }
     );
 
-
   const data =
-    await response.json().catch(
-      () => ({})
-    );
-
+    await response
+      .json()
+      .catch(()=>({}));
 
   if(!response.ok){
 
     throw new Error(
       data.error ||
-      ("Server error " + response.status)
+      ("Server error " +
+       response.status)
     );
-
   }
 
-
-  return data.reply ||
-    "جواب نہیں ملا۔";
-
+  return (
+    data.reply ||
+    "جواب نہیں ملا۔"
+  );
 }
 
 
-async function send(text){
+/* =========================
+   SEND
+========================= */
 
-  text = text.trim();
+async function send(){
 
-  if(!text) return;
+  const text =
+    msg.value.trim();
 
+  if(!text)return;
 
   add(text,"user");
 
-  msg.value = "";
+  msg.value="";
 
-  status.textContent =
-    "AI سوچ رہا ہے…";
-
-
-  const localReply =
+  const local =
     localCommand(text);
 
+  if(local){
 
-  if(localReply){
+    add(local,"bot");
 
-    add(localReply,"bot");
-
-    speak(localReply);
-
-    history.push({
-      role:"user",
-      content:text
-    });
-
-    history.push({
-      role:"assistant",
-      content:localReply
-    });
-
-    status.textContent =
-      "تیار ہے";
+    speak(local);
 
     return;
   }
 
+  status.textContent =
+    "AI سوچ رہا ہے…";
 
   try{
 
     const reply =
       await ask(text);
 
-
     history.push({
       role:"user",
       content:text
     });
 
-
     history.push({
       role:"assistant",
       content:reply
     });
-
 
     add(reply,"bot");
 
@@ -475,186 +494,317 @@ async function send(text){
     status.textContent =
       "تیار ہے";
 
-
   }catch(error){
 
-    console.error(error);
-
     add(
-      "AI سے رابطہ نہیں ہو سکا۔ ⚠️\n" +
-      error.message,
+      "AI سے رابطہ نہیں ہو سکا۔ ⚠️\n"
+      + error.message,
       "bot"
     );
 
     status.textContent =
-      "کنکشن چیک کریں";
-
+      "Connection check کریں";
   }
-
 }
 
 
-form.onsubmit = function(event){
+/* =========================
+   ENTER KEY
+========================= */
 
-  event.preventDefault();
+msg.addEventListener(
+  "keydown",
+  function(e){
 
-  send(msg.value);
+    if(e.key === "Enter"){
+      send();
+    }
 
-};
-
-
-document.getElementById("settings").onclick =
-function(){
-
-  const panel =
-    document.getElementById("panel");
-
-  panel.style.display =
-    panel.style.display === "block"
-      ? "none"
-      : "block";
-
-};
+  }
+);
 
 
-document.getElementById("save").onclick =
-function(){
+/* =========================
+   VOICE OUTPUT
+========================= */
 
-  const url =
-    document
-      .getElementById("url")
-      .value
-      .trim()
-      .replace(/\/$/,"");
+function speak(text){
+
+  if(
+    !("speechSynthesis" in window)
+  ){
+    return;
+  }
+
+  speechSynthesis.cancel();
+
+  const utter =
+    new SpeechSynthesisUtterance(text);
+
+  utter.lang = "ur-PK";
+
+  utter.rate = 0.95;
+
+  utter.pitch = 1;
+
+  speechSynthesis.speak(utter);
+}
 
 
-  localStorage.setItem(
-    key,
-    url
-  );
-
-
-  document.getElementById("panel")
-    .style.display = "none";
-
-
-  status.textContent =
-    "AI Brain URL محفوظ ہے۔";
-
-};
-
-
-document.getElementById("clear").onclick =
-function(){
-
-  mem = [];
-
-  saveMemory();
-
-  add(
-    "Memory صاف کر دی گئی ہے۔",
-    "bot"
-  );
-
-};
-
+/* =========================
+   VOICE RECOGNITION
+========================= */
 
 const SpeechRecognition =
   window.SpeechRecognition ||
   window.webkitSpeechRecognition;
 
 
-if(!SpeechRecognition){
+if(SpeechRecognition){
 
-  document.getElementById("mic").disabled =
-    true;
-
-  status.textContent =
-    "Text تیار ہے؛ Voice browser support پر منحصر ہے";
-
-}else{
-
-  const recognition =
+  recognition =
     new SpeechRecognition();
-
 
   recognition.lang =
     "ur-PK";
 
-  recognition.interimResults =
+  recognition.continuous =
     false;
 
-  recognition.continuous =
+  recognition.interimResults =
     false;
 
 
   recognition.onstart =
-  function(){
+    function(){
 
-    status.textContent =
-      "سن رہا ہوں… بولیں 🎙️";
+      listening=true;
 
-    document.getElementById("mic")
-      .textContent = "⏹️";
+      status.textContent =
+        "🎙️ سن رہا ہوں…";
 
-  };
+      document
+        .getElementById("mic")
+        .textContent="🔴";
+    };
 
 
   recognition.onresult =
-  function(event){
+    function(event){
 
-    const text =
-      event.results[0][0].transcript;
+      const text =
+        event.results[0][0].transcript
+          .trim();
 
-    msg.value = text;
+      msg.value = text;
 
-    send(text);
+      status.textContent =
+        "آپ نے کہا: " + text;
 
-  };
+      send();
+    };
 
 
   recognition.onerror =
-  function(event){
+    function(){
 
-    status.textContent =
-      event.error === "not-allowed"
-        ? "Microphone permission Allow کریں"
-        : "Voice error: " + event.error;
+      listening=false;
 
-  };
+      status.textContent =
+        "Voice error";
+
+      document
+        .getElementById("mic")
+        .textContent="🎙️";
+    };
 
 
   recognition.onend =
-  function(){
+    function(){
 
-    document.getElementById("mic")
-      .textContent = "🎙️";
+      listening=false;
 
-  };
+      document
+        .getElementById("mic")
+        .textContent="🎙️";
 
+      if(
+        status.textContent ===
+        "🎙️ سن رہا ہوں…"
+      ){
 
-  document.getElementById("mic").onclick =
-  function(){
-
-    try{
-
-      recognition.start();
-
-    }catch(error){
-
-      console.log(error);
-
-    }
-
-  };
+        status.textContent =
+          "تیار ہے";
+      }
+    };
 
 }
 
 
-add(
-  "السلام علیکم کامران! 👋\n" +
-  "میں Kamran A1 V2 ہوں۔ اب Real AI Brain کو محفوظ backend کے ذریعے connect کیا جائے گا۔",
-  "bot"
+/* =========================
+   START LISTENING
+========================= */
+
+function startListening(){
+
+  if(!recognition){
+
+    alert(
+      "آپ کے browser میں Voice Recognition support نہیں ہے۔"
+    );
+
+    return;
+  }
+
+  if(listening){
+
+    recognition.stop();
+
+    return;
+  }
+
+  try{
+
+    recognition.start();
+
+  }catch(e){
+
+    console.log(e);
+  }
+}
+
+
+/* =========================
+   WAKE WORD
+   "KAMRAN"
+========================= */
+
+let wakeRecognition = null;
+
+let wakeRunning = false;
+
+
+function startWakeWord(){
+
+  if(!SpeechRecognition){
+    return;
+  }
+
+  if(wakeRunning){
+    return;
+  }
+
+  wakeRecognition =
+    new SpeechRecognition();
+
+  wakeRecognition.lang =
+    "en-US";
+
+  wakeRecognition.continuous =
+    true;
+
+  wakeRecognition.interimResults =
+    false;
+
+
+  wakeRecognition.onresult =
+    function(event){
+
+      for(
+        let i =
+          event.resultIndex;
+        i < event.results.length;
+        i++
+      ){
+
+        const text =
+          event.results[i][0]
+            .transcript
+            .toLowerCase()
+            .trim();
+
+        console.log(
+          "Wake:",
+          text
+        );
+
+
+        if(
+          text.includes("kamran")
+        ){
+
+          status.textContent =
+            "👂 جی کامران، میں سن رہا ہوں…";
+
+          speak(
+            "جی، میں سن رہا ہوں۔"
+          );
+
+          setTimeout(
+            ()=>{
+              startListening();
+            },
+            700
+          );
+        }
+
+      }
+    };
+
+
+  wakeRecognition.onstart =
+    function(){
+
+      wakeRunning=true;
+
+      console.log(
+        "Wake word active"
+      );
+    };
+
+
+  wakeRecognition.onend =
+    function(){
+
+      wakeRunning=false;
+
+      setTimeout(
+        startWakeWord,
+        1000
+      );
+    };
+
+
+  wakeRecognition.onerror =
+    function(){
+
+      wakeRunning=false;
+
+      setTimeout(
+        startWakeWord,
+        2000
+      );
+    };
+
+
+  try{
+
+    wakeRecognition.start();
+
+  }catch(e){
+
+    console.log(e);
+  }
+}
+
+
+/* =========================
+   START
+========================= */
+
+setTimeout(
+  startWakeWord,
+  1500
 );
 
 </script>
