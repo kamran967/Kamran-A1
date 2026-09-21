@@ -288,8 +288,21 @@ function speak(text){
 
 function localCommand(text){
 
+  // پہلے نام پوچھنے والا سوال check کریں
+  if(/میرا نام کیا ہے/.test(text)){
+
+    const name =
+      mem.find(x => x.type === "name");
+
+    return name
+      ? "آپ کا نام " + name.value + " ہے۔"
+      : "آپ کا نام ابھی Memory میں نہیں ہے۔";
+  }
+
+
+  // نام محفوظ کریں
   let nameMatch =
-    text.match(/(?:میرا نام|میرا نام ہے)\s+(.+)/);
+    text.match(/^میرا نام(?: ہے)?\s+(.+)$/);
 
   if(nameMatch){
 
@@ -310,6 +323,7 @@ function localCommand(text){
   }
 
 
+  // عام Memory
   if(text.startsWith("یاد رکھو")){
 
     const value =
@@ -331,19 +345,7 @@ function localCommand(text){
   }
 
 
-  if(/میرا نام کیا ہے/.test(text)){
-
-    const name =
-      mem.find(x => x.type === "name");
-
-    return name
-      ? "آپ کا نام " + name.value + " ہے۔"
-      : "آپ کا نام ابھی Memory میں نہیں ہے۔";
-  }
-
-
   return null;
-
 }
 
 
