@@ -244,6 +244,17 @@ let wakeMode = false;
 
 let wakeListening = false;
 
+/*
+   یہ flag بتائے گا کہ Wake Word کے بعد
+   ہم command سننے کے مرحلے میں ہیں۔
+*/
+let waitingForCommand = false;
+
+/*
+   یہ flag بتائے گا کہ Assistant اس وقت بول رہا ہے۔
+*/
+let assistantSpeaking = false;
+
 
 const chat =
   document.getElementById("chat");
@@ -299,7 +310,9 @@ function saveSettings(){
 
   setTimeout(
     ()=>{
-      status.textContent="تیار ہے";
+      if(!assistantSpeaking){
+        status.textContent="تیار ہے";
+      }
     },
     1500
   );
@@ -507,6 +520,159 @@ async function ask(text){
 
 
 /* =========================
+   SPEAK
+========================= */
+
+/*
+   اب speak() callback بھی لے گا۔
+
+   یعنی:
+   Assistant کی آواز ختم ہونے تک
+   اگلا microphone start نہیں ہوگا۔
+*/
+
+function speak(text,onDone){
+
+  if(
+    !("speechSynthesis" in window)
+  ){
+
+    assistantSpeaking=false;
+
+    if(onDone){
+      onDone();
+    }
+
+    return;
+  }
+
+
+  /*
+     پرانی speech ختم کریں
+  */
+
+  speechSynthesis.cancel();
+
+  assistantSpeaking=true;
+
+
+  const utter =
+    new SpeechSynthesisUtterance(
+      text
+    );
+
+
+  utter.lang =
+    "ur-PK";
+
+  utter.rate =
+    0.95;
+
+  utter.pitch =
+    1;
+
+
+  utter.onstart =
+    function(){
+
+      assistantSpeaking=true;
+
+      status.textContent =
+        "🔊 بول رہا ہوں…";
+    };
+
+
+  utter.onend =
+    function(){
+
+      assistantSpeaking=false;
+
+      if(onDone){
+        onDone();
+      }
+    };
+
+
+  utter.onerror =
+    function(){
+
+      assistantSpeaking=false;
+
+      if(onDone){
+        onDone();
+      }
+    };
+
+
+  speechSynthesis.speak(
+    utter
+  );
+}
+
+
+/* =========================
+   AFTER ASSISTANT SPEAKS
+========================= */
+
+function afterAssistantSpeech(){
+
+  /*
+     اگر Wake Mode بند ہے تو کچھ نہیں کرنا
+  */
+
+  if(!wakeMode){
+    status.textContent="تیار ہے";
+    return;
+  }
+
+
+  /*
+     اگر ہم command سننے کے مرحلے میں ہیں
+     تو ابھی Wake دوبارہ شروع نہیں کرنا
+  */
+
+  if(listening){
+    return;
+  }
+
+
+  if(waitingForCommand){
+
+    return;
+  }
+
+
+  /*
+     Wake Mode دوبارہ شروع کریں
+  */
+
+  status.textContent =
+    "تیار ہے";
+
+  wakeStatus.textContent =
+    '🟢 Wake Mode ON — "Kamran" کہیں';
+
+  setTimeout(
+    function(){
+
+      if(
+        wakeMode &&
+        !listening &&
+        !assistantSpeaking &&
+        !wakeListening
+      ){
+
+        startWakeRecognition();
+
+      }
+
+    },
+    300
+  );
+}
+
+
+/* =========================
    SEND
 ========================= */
 
@@ -526,6 +692,10 @@ async function send(){
   msg.value="";
 
 
+  /*
+     Local command
+  */
+
   const local =
     localCommand(text);
 
@@ -537,7 +707,10 @@ async function send(){
       "bot"
     );
 
-    speak(local);
+    speak(
+      local,
+      afterAssistantSpeech
+    );
 
     return;
   }
@@ -571,7 +744,15 @@ async function send(){
     );
 
 
-    speak(reply);
+    /*
+       AI جواب مکمل بولنے کے بعد
+       Wake Mode واپس شروع ہوگا
+    */
+
+    speak(
+      reply,
+      afterAssistantSpeech
+    );
 
 
     status.textContent =
@@ -589,6 +770,21 @@ async function send(){
 
     status.textContent =
       "Connection check کریں";
+
+
+    /*
+       Error کے بعد بھی Wake Mode واپس لائیں
+    */
+
+    if(wakeMode){
+
+      setTimeout(
+        afterAssistantSpeech,
+        500
+      );
+
+    }
+
   }
 }
 
@@ -610,45 +806,7 @@ msg.addEventListener(
 
 
 /* =========================
-   VOICE OUTPUT
-========================= */
-
-function speak(text){
-
-  if(
-    !("speechSynthesis" in window)
-  ){
-    return;
-  }
-
-
-  speechSynthesis.cancel();
-
-
-  const utter =
-    new SpeechSynthesisUtterance(
-      text
-    );
-
-
-  utter.lang =
-    "ur-PK";
-
-  utter.rate =
-    0.95;
-
-  utter.pitch =
-    1;
-
-
-  speechSynthesis.speak(
-    utter
-  );
-}
-
-
-/* =========================
-   NORMAL VOICE INPUT
+   SPEECH RECOGNITION
 ========================= */
 
 const SpeechRecognition =
@@ -656,11 +814,20 @@ const SpeechRecognition =
   window.webkitSpeechRecognition;
 
 
+/* =========================
+   NORMAL COMMAND RECOGNITION
+========================= */
+
 if(SpeechRecognition){
 
   recognition =
     new SpeechRecognition();
 
+
+  /*
+     اردو + انگریزی دونوں میں بہتر
+     command recognition
+  */
 
   recognition.lang =
     "ur-PK";
@@ -698,9 +865,20 @@ if(SpeechRecognition){
         .trim();
 
 
+      console.log(
+        "Command heard:",
+        text
+      );
+
+
       msg.value =
         text;
 
+
+      /*
+         Recognition پہلے ہی command
+         مکمل کر چکا ہے۔
+      */
 
       send();
     };
@@ -710,7 +888,7 @@ if(SpeechRecognition){
     function(event){
 
       console.log(
-        "Voice error:",
+        "Command Voice error:",
         event.error
       );
 
@@ -721,8 +899,34 @@ if(SpeechRecognition){
         .textContent =
         "🎙️";
 
+      /*
+         aborted / no-speech کو
+         unnecessary error نہ دکھائیں
+      */
+
+      if(
+        event.error === "aborted" ||
+        event.error === "no-speech"
+      ){
+
+        if(wakeMode){
+
+          status.textContent =
+            "Wake Mode تیار ہے";
+
+        }else{
+
+          status.textContent =
+            "تیار ہے";
+        }
+
+        return;
+      }
+
+
       status.textContent =
-        "Voice error";
+        "Voice error: " +
+        event.error;
     };
 
 
@@ -736,7 +940,40 @@ if(SpeechRecognition){
         .textContent =
         "🎙️";
 
-      if(!wakeMode){
+
+      /*
+         Wake Mode میں فوراً Wake recognition
+         شروع نہیں کرنی۔
+         
+         Assistant کی speech ختم ہونے کے بعد
+         afterAssistantSpeech() اسے شروع کرے گا۔
+      */
+
+      if(
+        wakeMode &&
+        !assistantSpeaking &&
+        !waitingForCommand
+      ){
+
+        setTimeout(
+          function(){
+
+            if(
+              wakeMode &&
+              !listening &&
+              !assistantSpeaking &&
+              !wakeListening
+            ){
+
+              startWakeRecognition();
+
+            }
+
+          },
+          300
+        );
+
+      }else if(!wakeMode){
 
         status.textContent =
           "تیار ہے";
@@ -744,6 +981,10 @@ if(SpeechRecognition){
     };
 }
 
+
+/* =========================
+   START NORMAL LISTENING
+========================= */
 
 function startListening(){
 
@@ -757,11 +998,71 @@ function startListening(){
   }
 
 
-  if(listening){
+  /*
+     اگر Wake recognition چل رہی ہے
+     تو پہلے اسے بند کریں۔
+  */
 
-    recognition.stop();
+  if(wakeListening){
+
+    try{
+
+      wakeRecognition.stop();
+
+    }catch(e){}
+
+    wakeListening=false;
+  }
+
+
+  /*
+     Wake Mode میں manually command سننے
+     کے لیے بھی waitingForCommand true کریں۔
+  */
+
+  if(wakeMode){
+
+    waitingForCommand=true;
+  }
+
+
+  /*
+     اگر Assistant ابھی بول رہا ہے تو
+     microphone شروع نہ کریں۔
+  */
+
+  if(assistantSpeaking){
+
+    console.log(
+      "Assistant ابھی بول رہا ہے۔"
+    );
 
     return;
+  }
+
+
+  if(listening){
+
+    try{
+
+      recognition.stop();
+
+    }catch(e){}
+
+    return;
+  }
+
+
+  /*
+     Speech synthesis مکمل طور پر بند کریں۔
+  */
+
+  if(
+    "speechSynthesis" in window
+  ){
+
+    speechSynthesis.cancel();
+
   }
 
 
@@ -771,13 +1072,85 @@ function startListening(){
 
   }catch(error){
 
-    console.log(error);
+    console.log(
+      "Recognition start:",
+      error
+    );
+
   }
 }
 
 
 /* =========================
-   WAKE WORD
+   WAKE WORD NORMALIZER
+========================= */
+
+function normalizeWakeText(text){
+
+  return text
+    .toLowerCase()
+    .replace(/[.,!?،۔؟]/g," ")
+    .replace(/\s+/g," ")
+    .trim();
+}
+
+
+/* =========================
+   CHECK KAMRAN
+========================= */
+
+function isKamran(text){
+
+  const t =
+    normalizeWakeText(text);
+
+
+  /*
+     مختلف ممکنہ recognition results
+  */
+
+  const patterns = [
+
+    "کامران",
+
+    "کمران",
+
+    "کام ر ان",
+
+    "kamran",
+
+    "kam ran",
+
+    "camran",
+
+    "cam ran",
+
+    "kamron",
+
+    "کامر ان"
+
+  ];
+
+
+  for(
+    const p of patterns
+  ){
+
+    if(
+      t.includes(p)
+    ){
+
+      return true;
+    }
+  }
+
+
+  return false;
+}
+
+
+/* =========================
+   CREATE WAKE RECOGNITION
 ========================= */
 
 function createWakeRecognition(){
@@ -832,8 +1205,7 @@ function createWakeRecognition(){
         const heard =
           event.results[i][0]
           .transcript
-          .trim()
-          .toLowerCase();
+          .trim();
 
 
         console.log(
@@ -842,30 +1214,82 @@ function createWakeRecognition(){
         );
 
 
+        /*
+           Kamran ملا؟
+        */
+
         if(
-          heard.includes("کامران") ||
-          heard.includes("kamran")
+          isKamran(heard)
         ){
+
+          console.log(
+            "WAKE WORD DETECTED!"
+          );
+
+
+          /*
+             command listening phase شروع
+          */
+
+          waitingForCommand=true;
+
 
           wakeStatus.textContent =
             "👂 جی کامران، میں سن رہا ہوں…";
 
 
-          r.stop();
+          /*
+             Wake recognition فوراً stop
+          */
 
+          try{
+
+            r.stop();
+
+          }catch(e){}
+
+
+          /*
+             اب اہم چیز:
+
+             پہلے Assistant بولے گا۔
+             اس کی آواز ختم ہونے کے بعد
+             startListening() ہوگا۔
+          */
 
           speak(
-            "جی، میں سن رہا ہوں۔"
-          );
-
-
-          setTimeout(
+            "جی، میں سن رہا ہوں۔",
             function(){
 
-              startListening();
+              if(
+                wakeMode &&
+                waitingForCommand &&
+                !listening
+              ){
 
-            },
-            1000
+                /*
+                   Assistant کی آواز مکمل ختم ہو چکی ہے
+                */
+
+                setTimeout(
+                  function(){
+
+                    if(
+                      wakeMode &&
+                      !listening
+                    ){
+
+                      startListening();
+
+                    }
+
+                  },
+                  250
+                );
+
+              }
+
+            }
           );
 
 
@@ -882,6 +1306,53 @@ function createWakeRecognition(){
         "Wake error:",
         event.error
       );
+
+
+      wakeListening=false;
+
+
+      /*
+         یہ errors عام طور پر browser
+         recognition میں آ سکتے ہیں۔
+      */
+
+      if(
+        event.error === "aborted" ||
+        event.error === "no-speech"
+      ){
+
+        return;
+      }
+
+
+      /*
+         audio-capture error ہو تو
+         تھوڑا wait کرکے دوبارہ try کریں
+      */
+
+      if(
+        wakeMode &&
+        !waitingForCommand
+      ){
+
+        setTimeout(
+          function(){
+
+            if(
+              wakeMode &&
+              !wakeListening &&
+              !listening &&
+              !assistantSpeaking
+            ){
+
+              startWakeRecognition();
+
+            }
+
+          },
+          1000
+        );
+      }
     };
 
 
@@ -891,15 +1362,49 @@ function createWakeRecognition(){
       wakeListening=false;
 
 
-      if(wakeMode){
+      /*
+         اگر Wake Word detect ہو چکا ہے
+         تو ابھی Wake دوبارہ START نہیں کرنا۔
+
+         Command پہلے سنی جائے گی۔
+      */
+
+      if(
+        waitingForCommand
+      ){
+
+        return;
+      }
+
+
+      /*
+         اگر Wake Mode ابھی ON ہے اور
+         Assistant نہیں بول رہا تو restart
+      */
+
+      if(
+        wakeMode &&
+        !assistantSpeaking &&
+        !listening
+      ){
 
         setTimeout(
           function(){
 
-            startWakeRecognition();
+            if(
+              wakeMode &&
+              !wakeListening &&
+              !listening &&
+              !assistantSpeaking &&
+              !waitingForCommand
+            ){
+
+              startWakeRecognition();
+
+            }
 
           },
-          800
+          500
         );
       }
     };
@@ -909,9 +1414,40 @@ function createWakeRecognition(){
 }
 
 
+/* =========================
+   START WAKE RECOGNITION
+========================= */
+
 function startWakeRecognition(){
 
   if(!wakeMode){
+    return;
+  }
+
+
+  /*
+     Command سن رہے ہوں تو Wake نہیں
+  */
+
+  if(waitingForCommand){
+    return;
+  }
+
+
+  /*
+     Assistant بول رہا ہو تو Wake نہیں
+  */
+
+  if(assistantSpeaking){
+    return;
+  }
+
+
+  /*
+     Normal microphone چل رہا ہو تو Wake نہیں
+  */
+
+  if(listening){
     return;
   }
 
@@ -940,6 +1476,7 @@ function startWakeRecognition(){
       "Wake start:",
       error
     );
+
   }
 }
 
@@ -960,17 +1497,50 @@ function toggleWakeMode(){
   }
 
 
+  /*
+     ========================
+     OFF
+     ========================
+  */
+
   if(wakeMode){
 
     wakeMode=false;
+
+    waitingForCommand=false;
 
 
     if(wakeRecognition){
 
       try{
+
         wakeRecognition.stop();
+
       }catch(e){}
+
     }
+
+
+    wakeListening=false;
+
+
+    /*
+       اگر command listening چل رہی ہو
+       تو اسے بھی بند کریں۔
+    */
+
+    if(recognition && listening){
+
+      try{
+
+        recognition.stop();
+
+      }catch(e){}
+
+    }
+
+
+    listening=false;
 
 
     wakeStatus.textContent =
@@ -991,7 +1561,15 @@ function toggleWakeMode(){
   }
 
 
+  /*
+     ========================
+     ON
+     ========================
+  */
+
   wakeMode=true;
+
+  waitingForCommand=false;
 
 
   document
@@ -1002,6 +1580,39 @@ function toggleWakeMode(){
 
   wakeStatus.textContent =
     '🟡 Microphone activate ہو رہا ہے…';
+
+
+  status.textContent =
+    "Wake Mode شروع ہو رہا ہے…";
+
+
+  /*
+     اگر Assistant بول رہا ہے تو
+     اس کی آواز ختم ہونے کے بعد Wake start ہوگا۔
+  */
+
+  if(assistantSpeaking){
+
+    const waitForSpeech =
+      setInterval(
+        function(){
+
+          if(!assistantSpeaking){
+
+            clearInterval(
+              waitForSpeech
+            );
+
+            startWakeRecognition();
+
+          }
+
+        },
+        100
+      );
+
+    return;
+  }
 
 
   startWakeRecognition();
