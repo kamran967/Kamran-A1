@@ -137,7 +137,6 @@ button{
 <body>
 
 <header>
-
   Kamran A1 🤖
 
   <button
@@ -146,7 +145,6 @@ button{
   >
     ⚙️
   </button>
-
 </header>
 
 <div id="status">
@@ -218,6 +216,7 @@ button{
 
 </div>
 
+
 <script>
 
 /* =====================================================
@@ -226,10 +225,9 @@ button{
 
 const key = "kamran_a1_worker";
 
-let mem =
-  JSON.parse(
-    localStorage.getItem("kamran_memory") || "[]"
-  );
+let mem = JSON.parse(
+  localStorage.getItem("kamran_memory") || "[]"
+);
 
 let history = [];
 
@@ -244,26 +242,13 @@ let wakeMode = false;
 let voiceState = "idle";
 
 
-const chat =
-  document.getElementById("chat");
-
-const msg =
-  document.getElementById("msg");
-
-const status =
-  document.getElementById("status");
-
-const wakeStatus =
-  document.getElementById("wakeStatus");
-
-const workerUrl =
-  document.getElementById("workerUrl");
-
-const micButton =
-  document.getElementById("mic");
-
-const wakeButton =
-  document.getElementById("wakeBtn");
+const chat = document.getElementById("chat");
+const msg = document.getElementById("msg");
+const status = document.getElementById("status");
+const wakeStatus = document.getElementById("wakeStatus");
+const workerUrl = document.getElementById("workerUrl");
+const micButton = document.getElementById("mic");
+const wakeButton = document.getElementById("wakeBtn");
 
 
 /* =====================================================
@@ -292,7 +277,15 @@ function saveSettings(){
     workerUrl.value.trim();
 
   url =
-    url.replace(/\/$/,"");
+    url.replace(/\/+$/,"");
+
+  if(!url){
+
+    status.textContent =
+      "Worker URL خالی ہے۔";
+
+    return;
+  }
 
   localStorage.setItem(
     key,
@@ -302,22 +295,12 @@ function saveSettings(){
   status.textContent =
     "Worker URL محفوظ ہو گیا ✅";
 
-  setTimeout(
-    function(){
+  setTimeout(function(){
 
-      if(
-        voiceState !== "speaking" &&
-        voiceState !== "command"
-      ){
+    status.textContent =
+      "تیار ہے";
 
-        status.textContent =
-          "تیار ہے";
-
-      }
-
-    },
-    1500
-  );
+  },1500);
 }
 
 
@@ -375,7 +358,7 @@ function add(text,type){
 
 function cleanText(text){
 
-  return text
+  return String(text || "")
     .trim()
     .replace(/[۔؟?.,،!！]/g,"")
     .replace(/\s+/g," ");
@@ -385,7 +368,7 @@ function cleanText(text){
 /* =====================================================
    LOCAL COMMANDS / MEMORY
 ===================================================== */
-<script>
+
 function localCommand(originalText){
 
   const text =
@@ -415,7 +398,6 @@ function localCommand(originalText){
         x => x.type === "name"
       );
 
-
     if(
       savedName &&
       savedName.value
@@ -425,12 +407,10 @@ function localCommand(originalText){
         reply:
           "آپ کا نام " +
           savedName.value +
-          " ہے.",
+          " ہے۔",
         handled:true
       };
-
     }
-
 
     return {
       reply:
@@ -455,7 +435,6 @@ function localCommand(originalText){
         x => x.type === "name"
       );
 
-
     if(
       savedName &&
       savedName.value
@@ -468,9 +447,7 @@ function localCommand(originalText){
           ".",
         handled:true
       };
-
     }
-
 
     return {
       reply:
@@ -490,20 +467,16 @@ function localCommand(originalText){
 
     let name = "";
 
-
     let match =
       text.match(
         /^میرا نام\s+(.+?)\s+ہے$/i
       );
 
-
     if(match){
 
       name =
         match[1].trim();
-
     }
-
 
     if(!name){
 
@@ -512,12 +485,10 @@ function localCommand(originalText){
           /^میرا نام\s+(.+)$/i
         );
 
-
       if(match){
 
         name =
           match[1].trim();
-
       }
     }
 
@@ -531,6 +502,12 @@ function localCommand(originalText){
         .trim();
 
 
+    name =
+      name
+        .replace(/\s+ہے$/i,"")
+        .trim();
+
+
     if(
       name &&
       name !== "کیا ہے" &&
@@ -539,26 +516,17 @@ function localCommand(originalText){
       name !== "بتاو"
     ){
 
-      name =
-        name
-          .replace(/\s+ہے$/i,"")
-          .trim();
-
-
       mem =
         mem.filter(
           x => x.type !== "name"
         );
-
 
       mem.push({
         type:"name",
         value:name
       });
 
-
       saveMemory();
-
 
       return {
         reply:
@@ -574,17 +542,15 @@ function localCommand(originalText){
      SAVE NAME - ENGLISH
   ========================= */
 
-  let englishName =
+  const englishName =
     lower.match(
       /^my name is\s+(.+)$/i
     );
-
 
   if(englishName){
 
     const name =
       englishName[1].trim();
-
 
     if(name){
 
@@ -593,15 +559,12 @@ function localCommand(originalText){
           x => x.type !== "name"
         );
 
-
       mem.push({
         type:"name",
         value:name
       });
 
-
       saveMemory();
-
 
       return {
         reply:
@@ -628,7 +591,6 @@ function localCommand(originalText){
         )
         .trim();
 
-
     if(value){
 
       mem.push({
@@ -636,9 +598,7 @@ function localCommand(originalText){
         value:value
       });
 
-
       saveMemory();
-
 
       return {
         reply:
@@ -664,14 +624,13 @@ async function ask(text){
   let baseUrl =
     (
       localStorage.getItem(key) || ""
-    ).replace(/\/$/,"");
+    ).replace(/\/+$/,"");
 
 
   if(!baseUrl){
 
-    return (
-      "AI Brain ابھی connect نہیں ہوا۔ " +
-      "⚙️ دبائیں اور Worker URL محفوظ کریں۔"
+    throw new Error(
+      "Worker URL محفوظ نہیں ہے۔ Settings میں Worker URL ڈالیں۔"
     );
   }
 
@@ -721,13 +680,18 @@ async function ask(text){
   }
 
 
-  return (
-    data.reply ||
-    "جواب نہیں ملا۔"
-  );
+  if(!data.reply){
+
+    throw new Error(
+      "Worker نے جواب نہیں دیا۔"
+    );
+  }
+
+
+  return data.reply;
 }
 
-</script>
+
 /* =====================================================
    SPEAK
 ===================================================== */
@@ -789,7 +753,6 @@ function speak(text,done){
       voiceState =
         "idle";
 
-
       if(done){
 
         setTimeout(
@@ -809,7 +772,6 @@ function speak(text,done){
 
       voiceState =
         "idle";
-
 
       if(done){
 
@@ -870,22 +832,19 @@ function afterSpeech(){
     '🟢 Wake Mode ON — "Kamran" کہیں';
 
 
-  setTimeout(
-    function(){
+  setTimeout(function(){
 
-      if(
-        wakeMode &&
-        voiceState === "wake" &&
-        !listening &&
-        !wakeListening
-      ){
+    if(
+      wakeMode &&
+      voiceState === "wake" &&
+      !listening &&
+      !wakeListening
+    ){
 
-        startWakeRecognition();
-      }
+      startWakeRecognition();
+    }
 
-    },
-    350
-  );
+  },350);
 }
 
 
@@ -925,7 +884,10 @@ async function send(){
     localCommand(text);
 
 
-  if(local && local.handled){
+  if(
+    local &&
+    local.handled
+  ){
 
     add(
       local.reply,
@@ -952,7 +914,6 @@ async function send(){
 
       }
     );
-
 
     return;
   }
@@ -1042,7 +1003,7 @@ async function send(){
 
 
 /* =====================================================
-   ENTER
+   ENTER KEY
 ===================================================== */
 
 msg.addEventListener(
@@ -1082,10 +1043,8 @@ if(SpeechRecognition){
   recognition.lang =
     "ur-PK";
 
-
   recognition.continuous =
     false;
-
 
   recognition.interimResults =
     false;
@@ -1117,8 +1076,8 @@ if(SpeechRecognition){
 
 
       for(
-        let i=event.resultIndex;
-        i<event.results.length;
+        let i = event.resultIndex;
+        i < event.results.length;
         i++
       ){
 
@@ -1239,22 +1198,19 @@ if(SpeechRecognition){
           "wake";
 
 
-        setTimeout(
-          function(){
+        setTimeout(function(){
 
-            if(
-              wakeMode &&
-              voiceState === "wake" &&
-              !listening &&
-              !wakeListening
-            ){
+          if(
+            wakeMode &&
+            voiceState === "wake" &&
+            !listening &&
+            !wakeListening
+          ){
 
-              startWakeRecognition();
-            }
+            startWakeRecognition();
+          }
 
-          },
-          350
-        );
+        },350);
 
       }else{
 
@@ -1329,7 +1285,6 @@ function startListening(){
   ){
 
     speechSynthesis.cancel();
-
   }
 
 
@@ -1353,7 +1308,7 @@ function startListening(){
 
 function normalizeWakeText(text){
 
-  return text
+  return String(text || "")
     .toLowerCase()
     .replace(/[.,!?،۔؟]/g," ")
     .replace(/\s+/g," ")
@@ -1381,7 +1336,6 @@ function isKamran(text){
 
     "camran",
     "cam ran"
-
   ];
 
 
@@ -1421,10 +1375,8 @@ function createWakeRecognition(){
   r.lang =
     "ur-PK";
 
-
   r.continuous =
     true;
-
 
   r.interimResults =
     false;
@@ -1449,8 +1401,8 @@ function createWakeRecognition(){
     function(event){
 
       for(
-        let i=event.resultIndex;
-        i<event.results.length;
+        let i = event.resultIndex;
+        i < event.results.length;
         i++
       ){
 
@@ -1511,23 +1463,18 @@ function createWakeRecognition(){
                 !listening
               ){
 
-                setTimeout(
-                  function(){
+                setTimeout(function(){
 
-                    if(
-                      wakeMode &&
-                      !listening &&
-                      voiceState !== "speaking"
-                    ){
+                  if(
+                    wakeMode &&
+                    !listening &&
+                    voiceState !== "speaking"
+                  ){
 
-                      startListening();
+                    startListening();
+                  }
 
-                    }
-
-                  },
-                  300
-                );
-
+                },300);
               }
 
             }
@@ -1567,23 +1514,19 @@ function createWakeRecognition(){
         voiceState === "wake"
       ){
 
-        setTimeout(
-          function(){
+        setTimeout(function(){
 
-            if(
-              wakeMode &&
-              voiceState === "wake" &&
-              !wakeListening &&
-              !listening
-            ){
+          if(
+            wakeMode &&
+            voiceState === "wake" &&
+            !wakeListening &&
+            !listening
+          ){
 
-              startWakeRecognition();
+            startWakeRecognition();
+          }
 
-            }
-
-          },
-          1000
-        );
+        },1000);
       }
     };
 
@@ -1621,23 +1564,19 @@ function createWakeRecognition(){
         voiceState === "wake"
       ){
 
-        setTimeout(
-          function(){
+        setTimeout(function(){
 
-            if(
-              wakeMode &&
-              voiceState === "wake" &&
-              !wakeListening &&
-              !listening
-            ){
+          if(
+            wakeMode &&
+            voiceState === "wake" &&
+            !wakeListening &&
+            !listening
+          ){
 
-              startWakeRecognition();
+            startWakeRecognition();
+          }
 
-            }
-
-          },
-          500
-        );
+        },500);
       }
     };
 
@@ -1647,7 +1586,7 @@ function createWakeRecognition(){
 
 
 /* =====================================================
-   START WAKE
+   START WAKE RECOGNITION
 ===================================================== */
 
 function startWakeRecognition(){
@@ -1832,24 +1771,21 @@ function toggleWakeMode(){
   ){
 
     const wait =
-      setInterval(
-        function(){
+      setInterval(function(){
 
-          if(
-            !speechSynthesis.speaking
-          ){
+        if(
+          !speechSynthesis.speaking
+        ){
 
-            clearInterval(wait);
+          clearInterval(wait);
 
-            voiceState =
-              "wake";
+          voiceState =
+            "wake";
 
-            startWakeRecognition();
-          }
+          startWakeRecognition();
+        }
 
-        },
-        100
-      );
+      },100);
 
     return;
   }
