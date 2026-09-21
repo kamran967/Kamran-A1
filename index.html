@@ -33,7 +33,7 @@ function local(t){
  if(/میرا نام کیا ہے/.test(t)){let n=mem.find(x=>x.type=="name");return n?"آپ کا نام "+n.value+" ہے۔":"آپ کا نام ابھی Memory میں نہیں ہے۔"} return null
 }
 async function ask(t){let u=(localStorage.getItem(key)||"").replace(/\/$/,"");if(!u)return"AI Brain ابھی connect نہیں ہوا۔ ⚙️ دبائیں اور Worker URL محفوظ کریں۔";
-let r=await fetch(u+"/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message:t,memory:mem.slice(-12)})});
+let r=await fetch(u+"/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message:t,memory:mem.slice(-12),history:mem.slice(-20)});
 let d=await r.json().catch(()=>({}));if(!r.ok)throw Error(d.error||("Server error "+r.status));return d.reply||"جواب نہیں ملا۔"}
 async function send(t){t=t.trim();if(!t)return;add(t,"user");msg.value="";status.textContent="AI سوچ رہا ہے…";let x=local(t);if(x){add(x,"bot");speak(x);status.textContent="تیار ہے";return}try{let x=await ask(t);add(x,"bot");speak(x);status.textContent="تیار ہے"}catch(e){add("AI سے رابطہ نہیں ہو سکا۔ ⚠️\n"+e.message,"bot");status.textContent="کنکشن چیک کریں"}}
 form.onsubmit=e=>{e.preventDefault();send(msg.value)}
