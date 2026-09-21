@@ -22,7 +22,7 @@ input{flex:1;background:#17243a;color:white;border:1px solid #314564;border-radi
 <form id="form" class="bar"><button id="mic" type="button">🎙️</button><input id="msg" placeholder="اپنا پیغام لکھیں..." autocomplete="off"><button id="send" type="submit">➤</button></form>
 <script>
 const chat=document.getElementById("chat"),form=document.getElementById("form"),msg=document.getElementById("msg"),status=document.getElementById("status");
-let mem=JSON.parse(localStorage.getItem("kamranA1MemoryV2")||"[]"); const key="kamranA1ApiUrlV2";
+let mem=JSON.parse(localStorage.getItem("kamranA1MemoryV2")||"[]"); let history=[]; const key="kamranA1ApiUrlV2";
 document.getElementById("url").value=localStorage.getItem(key)||"";
 function save(){localStorage.setItem("kamranA1MemoryV2",JSON.stringify(mem))}
 function add(t,c){let b=document.createElement("div");b.className="msg "+c;b.textContent=t;let s=document.createElement("div");s.className="time";s.textContent=new Date().toLocaleTimeString("ur-PK",{hour:"2-digit",minute:"2-digit"});b.appendChild(s);chat.appendChild(b);chat.scrollTop=chat.scrollHeight}
