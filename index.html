@@ -6,201 +6,463 @@
 <title>Kamran A1</title>
 
 <style>
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
 
 html,body{
-  margin:0;padding:0;width:100%;min-height:100%;
-  background:#03060b;color:#fff;
-  font-family:Arial,"Noto Sans Arabic",sans-serif
+  margin:0;
+  padding:0;
+  width:100%;
+  min-height:100%;
+  background:#03060b;
+  color:#fff;
+  font-family:Arial,"Noto Sans Arabic",sans-serif;
 }
 
 body{overflow-x:hidden}
 
+button,input{
+  font-family:inherit;
+}
+
 .app{
-  width:100%;max-width:900px;min-height:100vh;margin:auto;
-  display:flex;flex-direction:column;
+  width:100%;
+  max-width:900px;
+  min-height:100vh;
+  margin:auto;
+  display:flex;
+  flex-direction:column;
   background:
-  radial-gradient(circle at 50% 8%,rgba(0,174,255,.14),transparent 30%),
-  linear-gradient(180deg,#08101b 0%,#03060b 55%,#020408 100%)
+    radial-gradient(circle at 50% 8%,rgba(0,174,255,.14),transparent 30%),
+    linear-gradient(180deg,#08101b 0%,#03060b 55%,#020408 100%);
 }
 
 .header{
-  padding:18px 15px 13px;text-align:center;
+  padding:15px 12px 12px;
+  text-align:center;
   border-bottom:1px solid rgba(255,255,255,.08);
-  background:rgba(3,6,11,.82);
-  backdrop-filter:blur(18px)
+  background:rgba(3,6,11,.88);
+  backdrop-filter:blur(18px);
+  position:relative;
 }
 
 .brand{
-  display:flex;align-items:center;justify-content:center;gap:11px
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
 }
 
 .logo{
-  width:48px;height:48px;border-radius:15px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:27px;background:linear-gradient(145deg,#172a43,#080d16);
+  width:46px;
+  height:46px;
+  border-radius:14px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:25px;
+  background:linear-gradient(145deg,#172a43,#080d16);
   border:1px solid rgba(125,211,252,.18);
-  box-shadow:0 0 28px rgba(0,180,255,.16)
+  box-shadow:0 0 28px rgba(0,180,255,.16);
 }
 
-.title{font-size:27px;font-weight:700}
+.title{
+  font-size:26px;
+  font-weight:700;
+}
+
 .title span{color:#72d7ff}
 
 .subtitle{
-  margin-top:4px;color:#68778d;font-size:10px;letter-spacing:2px
+  margin-top:3px;
+  color:#68778d;
+  font-size:9px;
+  letter-spacing:2px;
+}
+
+.settings-btn{
+  position:absolute;
+  left:12px;
+  top:16px;
+  width:43px;
+  height:43px;
+  border-radius:13px;
+  border:1px solid rgba(255,255,255,.1);
+  background:#0a1019;
+  color:#dce8f5;
+  font-size:20px;
 }
 
 .status{
-  display:inline-block;margin-top:12px;padding:7px 17px;
-  border-radius:50px;font-size:13px;color:#9aa8ba;
+  display:inline-block;
+  margin-top:10px;
+  padding:7px 17px;
+  border-radius:50px;
+  font-size:13px;
+  color:#9aa8ba;
   background:rgba(255,255,255,.045);
-  border:1px solid rgba(255,255,255,.08)
+  border:1px solid rgba(255,255,255,.08);
 }
 
 .status.listen{
-  color:#65f5a3;background:rgba(34,197,94,.08);
-  border-color:rgba(34,197,94,.3)
+  color:#65f5a3;
+  background:rgba(34,197,94,.08);
+  border-color:rgba(34,197,94,.3);
 }
 
 .status.speak{
-  color:#6ed8ff;background:rgba(14,165,233,.08);
-  border-color:rgba(14,165,233,.3)
+  color:#6ed8ff;
+  background:rgba(14,165,233,.08);
+  border-color:rgba(14,165,233,.3);
 }
 
 .status.think{
-  color:#f5d878;background:rgba(234,179,8,.07);
-  border-color:rgba(234,179,8,.25)
+  color:#f5d878;
+  background:rgba(234,179,8,.07);
+  border-color:rgba(234,179,8,.25);
 }
 
 .status.error{
-  color:#ff9292;background:rgba(239,68,68,.07);
-  border-color:rgba(239,68,68,.3)
+  color:#ff9292;
+  background:rgba(239,68,68,.07);
+  border-color:rgba(239,68,68,.3);
 }
 
 .orb-area{
-  height:190px;display:flex;align-items:center;justify-content:center
+  height:180px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 
 .orb{
-  width:125px;height:125px;border-radius:50%;
-  position:relative;display:flex;align-items:center;justify-content:center;
-  font-size:43px;
+  width:120px;
+  height:120px;
+  border-radius:50%;
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:40px;
   background:
-  radial-gradient(circle at 35% 28%,#e6f9ff 0%,#69d8ff 8%,#12698c 35%,#06151e 67%,#020509 100%);
+    radial-gradient(circle at 35% 28%,#e6f9ff 0%,#69d8ff 8%,#12698c 35%,#06151e 67%,#020509 100%);
   border:1px solid rgba(125,211,252,.35);
-  box-shadow:0 0 25px rgba(14,165,233,.28),0 0 65px rgba(14,165,233,.12);
-  transition:.3s
+  box-shadow:
+    0 0 25px rgba(14,165,233,.28),
+    0 0 65px rgba(14,165,233,.12);
+  transition:.3s;
 }
 
-.orb:before,.orb:after{
-  content:"";position:absolute;inset:-12px;border-radius:50%;
+.orb:before,
+.orb:after{
+  content:"";
+  position:absolute;
+  inset:-12px;
+  border-radius:50%;
   border:1px solid rgba(56,189,248,.14);
-  animation:pulse 3s infinite
+  animation:pulse 3s infinite;
 }
 
 .orb:after{
-  inset:-23px;border-color:rgba(56,189,248,.06);animation-delay:1s
+  inset:-23px;
+  border-color:rgba(56,189,248,.06);
+  animation-delay:1s;
 }
 
 .orb.active{
-  box-shadow:0 0 35px rgba(34,197,94,.42),0 0 90px rgba(34,197,94,.18)
+  box-shadow:
+    0 0 35px rgba(34,197,94,.42),
+    0 0 90px rgba(34,197,94,.18);
 }
 
 .orb.speaking{
-  box-shadow:0 0 35px rgba(56,189,248,.5),0 0 100px rgba(56,189,248,.2)
+  box-shadow:
+    0 0 35px rgba(56,189,248,.5),
+    0 0 100px rgba(56,189,248,.2);
 }
 
 @keyframes pulse{
-  0%,100%{transform:scale(.94);opacity:.45}
-  50%{transform:scale(1.04);opacity:.9}
+  0%,100%{
+    transform:scale(.94);
+    opacity:.45;
+  }
+  50%{
+    transform:scale(1.04);
+    opacity:.9;
+  }
 }
 
 .chat{
-  flex:1;padding:0 13px 130px
+  flex:1;
+  padding:0 13px 145px;
 }
 
-.message{display:flex;margin:9px 0}
+.message{
+  display:flex;
+  margin:9px 0;
+}
+
 .message.user{justify-content:flex-start}
 .message.ai{justify-content:flex-end}
 
 .bubble{
-  max-width:84%;padding:12px 15px;border-radius:18px;
-  line-height:1.65;font-size:15px;white-space:pre-wrap;
-  word-break:break-word
+  max-width:84%;
+  padding:12px 15px;
+  border-radius:18px;
+  line-height:1.65;
+  font-size:15px;
+  white-space:pre-wrap;
+  word-break:break-word;
 }
 
 .user .bubble{
   background:linear-gradient(135deg,#112238,#0a1421);
   border:1px solid rgba(125,211,252,.12);
-  border-bottom-left-radius:5px
+  border-bottom-left-radius:5px;
 }
 
 .ai .bubble{
   background:linear-gradient(135deg,#0e1721,#080d14);
   border:1px solid rgba(255,255,255,.08);
-  border-bottom-right-radius:5px
+  border-bottom-right-radius:5px;
 }
 
 .bottom{
-  position:fixed;left:0;right:0;bottom:0;z-index:50;
+  position:fixed;
+  left:0;
+  right:0;
+  bottom:0;
+  z-index:50;
   padding:9px 10px calc(9px + env(safe-area-inset-bottom));
-  background:rgba(3,6,11,.95);
+  background:rgba(3,6,11,.96);
   backdrop-filter:blur(20px);
-  border-top:1px solid rgba(255,255,255,.08)
+  border-top:1px solid rgba(255,255,255,.08);
 }
 
-.bottom-inner{max-width:900px;margin:auto}
+.bottom-inner{
+  max-width:900px;
+  margin:auto;
+}
 
 .input-row{
-  display:flex;gap:7px;direction:rtl
+  display:flex;
+  gap:7px;
+  direction:rtl;
 }
 
 .input{
-  flex:1;min-width:0;height:47px;border-radius:15px;
-  border:1px solid rgba(255,255,255,.1);outline:none;
-  color:#fff;background:#0a1019;padding:0 14px;
-  font-size:15px;direction:rtl
+  flex:1;
+  min-width:0;
+  height:47px;
+  border-radius:15px;
+  border:1px solid rgba(255,255,255,.1);
+  outline:none;
+  color:#fff;
+  background:#0a1019;
+  padding:0 14px;
+  font-size:15px;
+  direction:rtl;
 }
 
 .input:focus{
   border-color:rgba(56,189,248,.45);
-  box-shadow:0 0 15px rgba(56,189,248,.08)
+  box-shadow:0 0 15px rgba(56,189,248,.08);
 }
 
 .input::placeholder{color:#637085}
 
 .send{
-  width:50px;height:47px;border:0;border-radius:15px;
-  color:#fff;font-size:20px;background:linear-gradient(145deg,#087aa8,#07506f)
+  width:50px;
+  height:47px;
+  border:0;
+  border-radius:15px;
+  color:#fff;
+  font-size:20px;
+  background:linear-gradient(145deg,#087aa8,#07506f);
 }
 
 .controls{
-  display:grid;grid-template-columns:1fr 1fr 1fr;
-  gap:7px;margin-top:7px;direction:ltr
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:7px;
+  margin-top:7px;
+  direction:ltr;
 }
 
 .control{
-  height:43px;border:1px solid rgba(255,255,255,.09);
-  border-radius:13px;color:#dce8f5;background:#0a1019;
-  font-size:13px;font-weight:600
+  height:43px;
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:13px;
+  color:#dce8f5;
+  background:#0a1019;
+  font-size:13px;
+  font-weight:600;
 }
 
-.control.voice{border-color:rgba(56,189,248,.24)}
-.control.wake{border-color:rgba(34,197,94,.22)}
-.control.stop{border-color:rgba(239,68,68,.2)}
+.control.voice{
+  border-color:rgba(56,189,248,.24);
+}
+
+.control.wake{
+  border-color:rgba(34,197,94,.22);
+}
+
+.control.stop{
+  border-color:rgba(239,68,68,.2);
+}
 
 .control.wake.on{
-  color:#6ff5a5;background:rgba(34,197,94,.1);
-  border-color:rgba(34,197,94,.42)
+  color:#6ff5a5;
+  background:rgba(34,197,94,.1);
+  border-color:rgba(34,197,94,.42);
 }
 
-.control:active,.send:active{
-  transform:scale(.97)
+.control:active,
+.send:active,
+.settings-btn:active{
+  transform:scale(.97);
+}
+
+/* SETTINGS */
+
+.overlay{
+  position:fixed;
+  inset:0;
+  z-index:100;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  background:rgba(0,0,0,.72);
+  backdrop-filter:blur(8px);
+}
+
+.overlay.show{
+  display:flex;
+}
+
+.settings{
+  width:100%;
+  max-width:430px;
+  max-height:85vh;
+  overflow:auto;
+  border-radius:22px;
+  padding:20px;
+  background:#0a1019;
+  border:1px solid rgba(125,211,252,.15);
+  box-shadow:0 20px 80px rgba(0,0,0,.55);
+}
+
+.settings-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:18px;
+}
+
+.settings-head h2{
+  margin:0;
+  font-size:21px;
+}
+
+.close{
+  width:38px;
+  height:38px;
+  border:0;
+  border-radius:12px;
+  color:#fff;
+  background:#151e2a;
+  font-size:20px;
+}
+
+.setting-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  padding:15px 0;
+  border-bottom:1px solid rgba(255,255,255,.07);
+}
+
+.setting-text strong{
+  display:block;
+  font-size:15px;
+}
+
+.setting-text small{
+  display:block;
+  color:#718096;
+  margin-top:4px;
+  font-size:11px;
+}
+
+.switch{
+  width:48px;
+  height:27px;
+  border:0;
+  border-radius:30px;
+  background:#273243;
+  position:relative;
+  flex:none;
+}
+
+.switch:after{
+  content:"";
+  position:absolute;
+  top:4px;
+  right:25px;
+  width:19px;
+  height:19px;
+  border-radius:50%;
+  background:#fff;
+  transition:.2s;
+}
+
+.switch.on{
+  background:#087aa8;
+}
+
+.switch.on:after{
+  right:4px;
+}
+
+.setting-action{
+  width:100%;
+  height:45px;
+  margin-top:10px;
+  border-radius:13px;
+  border:1px solid rgba(255,255,255,.1);
+  background:#111a26;
+  color:#fff;
+  font-size:14px;
+}
+
+.setting-action.danger{
+  border-color:rgba(239,68,68,.25);
+  color:#ff9b9b;
+}
+
+.settings-note{
+  margin-top:15px;
+  padding:11px;
+  border-radius:12px;
+  background:rgba(56,189,248,.05);
+  color:#8292a7;
+  font-size:11px;
+  line-height:1.6;
 }
 
 @media(min-width:700px){
-  .bottom{padding-left:20px;padding-right:20px}
-  .bubble{max-width:70%}
+  .bottom{
+    padding-left:20px;
+    padding-right:20px;
+  }
+
+  .bubble{
+    max-width:70%;
+  }
 }
 </style>
 </head>
@@ -210,15 +472,29 @@ body{overflow-x:hidden}
 <div class="app">
 
 <header class="header">
+
+  <button id="settingsBtn" class="settings-btn" type="button">
+    ⚙️
+  </button>
+
   <div class="brand">
     <div class="logo">🤖</div>
+
     <div>
-      <div class="title">Kamran <span>A1</span></div>
-      <div class="subtitle">PERSONAL AI ASSISTANT</div>
+      <div class="title">
+        Kamran <span>A1</span>
+      </div>
+
+      <div class="subtitle">
+        PERSONAL AI ASSISTANT
+      </div>
     </div>
   </div>
 
-  <div id="status" class="status">تیار ہوں</div>
+  <div id="status" class="status">
+    تیار ہوں
+  </div>
+
 </header>
 
 <div class="orb-area">
@@ -229,10 +505,15 @@ body{overflow-x:hidden}
 
 </div>
 
+
+<!-- BOTTOM -->
+
 <div class="bottom">
+
   <div class="bottom-inner">
 
     <div class="input-row">
+
       <input
         id="textInput"
         class="input"
@@ -241,35 +522,140 @@ body{overflow-x:hidden}
         autocomplete="off"
       >
 
-      <button id="sendBtn" class="send" type="button">➤</button>
+      <button
+        id="sendBtn"
+        class="send"
+        type="button">
+        ➤
+      </button>
+
     </div>
 
     <div class="controls">
 
-      <button id="voiceBtn" class="control voice" type="button">
+      <button
+        id="voiceBtn"
+        class="control voice"
+        type="button">
         🎙️ Voice
       </button>
 
-      <button id="wakeBtn" class="control wake" type="button">
-        🟢 Jarvis Wake
+      <button
+        id="wakeBtn"
+        class="control wake"
+        type="button">
+        🟢 Kamran Wake
       </button>
 
-      <button id="stopBtn" class="control stop" type="button">
+      <button
+        id="stopBtn"
+        class="control stop"
+        type="button">
         ⛔ Stop
       </button>
 
     </div>
 
   </div>
+
+</div>
+
+
+<!-- SETTINGS -->
+
+<div id="settingsOverlay" class="overlay">
+
+  <div class="settings">
+
+    <div class="settings-head">
+
+      <h2>⚙️ Kamran A1 Settings</h2>
+
+      <button
+        id="closeSettings"
+        class="close"
+        type="button">
+        ✕
+      </button>
+
+    </div>
+
+
+    <div class="setting-row">
+
+      <div class="setting-text">
+        <strong>Voice Response</strong>
+        <small>AI کے جواب کو آواز میں سنائیں</small>
+      </div>
+
+      <button
+        id="voiceSwitch"
+        class="switch on"
+        type="button">
+      </button>
+
+    </div>
+
+
+    <div class="setting-row">
+
+      <div class="setting-text">
+        <strong>Kamran Wake</strong>
+        <small>صرف "Kamran" بولنے سے Assistant activate ہو</small>
+      </div>
+
+      <button
+        id="wakeSwitch"
+        class="switch"
+        type="button">
+      </button>
+
+    </div>
+
+
+    <div class="setting-row">
+
+      <div class="setting-text">
+        <strong>Local Memory</strong>
+        <small>نام اور محفوظ معلومات browser میں رکھیں</small>
+      </div>
+
+      <button
+        id="memorySwitch"
+        class="switch on"
+        type="button">
+      </button>
+
+    </div>
+
+
+    <button
+      id="clearChat"
+      class="setting-action"
+      type="button">
+      🗑️ Chat History صاف کریں
+    </button>
+
+
+    <button
+      id="clearMemory"
+      class="setting-action danger"
+      type="button">
+      🧠 Memory صاف کریں
+    </button>
+
+
+    <div class="settings-note">
+      Wake Word کے لیے browser کو microphone permission دینا ضروری ہے۔
+      Android پر Chrome میں microphone permission Allow کریں۔
+    </div>
+
+  </div>
+
 </div>
 
 
 <script>
-/* =========================================================
-   KAMRAN A1
-   STABLE FRONTEND
-   ========================================================= */
-
 "use strict";
 
 
@@ -280,8 +666,14 @@ body{overflow-x:hidden}
 const WORKER_URL =
   "https://kamran1.jeekamran48.workers.dev";
 
-const MEMORY_KEY = "kamran_memory";
-const HISTORY_KEY = "kamran_history";
+const MEMORY_KEY =
+  "kamran_memory_v2";
+
+const HISTORY_KEY =
+  "kamran_history_v2";
+
+const SETTINGS_KEY =
+  "kamran_settings_v2";
 
 
 /* =========================================================
@@ -306,63 +698,176 @@ const wakeBtn =
 const stopBtn =
   document.getElementById("stopBtn");
 
+const settingsBtn =
+  document.getElementById("settingsBtn");
+
+const closeSettings =
+  document.getElementById("closeSettings");
+
+const settingsOverlay =
+  document.getElementById("settingsOverlay");
+
 const statusEl =
   document.getElementById("status");
 
 const orb =
   document.getElementById("orb");
 
+const voiceSwitch =
+  document.getElementById("voiceSwitch");
+
+const wakeSwitch =
+  document.getElementById("wakeSwitch");
+
+const memorySwitch =
+  document.getElementById("memorySwitch");
+
+const clearChat =
+  document.getElementById("clearChat");
+
+const clearMemory =
+  document.getElementById("clearMemory");
+
 
 /* =========================================================
-   STORAGE
+   STATE
    ========================================================= */
 
 let memory = [];
+
 let history = [];
 
+let sending = false;
+
+let speaking = false;
+
+let recognition = null;
+
+let recognitionRunning = false;
+
+let recognitionMode = "idle";
+
+let wakeEnabled = false;
+
+let processingCommand = false;
+
+let voiceEnabled = true;
+
+let memoryEnabled = true;
+
+
+/* =========================================================
+   LOAD SETTINGS
+   ========================================================= */
+
 try {
-  const savedMemory =
+
+  const saved =
+    JSON.parse(
+      localStorage.getItem(SETTINGS_KEY) || "{}"
+    );
+
+  if (typeof saved.voiceEnabled === "boolean") {
+    voiceEnabled = saved.voiceEnabled;
+  }
+
+  if (typeof saved.wakeEnabled === "boolean") {
+    wakeEnabled = saved.wakeEnabled;
+  }
+
+  if (typeof saved.memoryEnabled === "boolean") {
+    memoryEnabled = saved.memoryEnabled;
+  }
+
+} catch(e) {}
+
+
+/* =========================================================
+   LOAD MEMORY
+   ========================================================= */
+
+try {
+
+  const saved =
     JSON.parse(
       localStorage.getItem(MEMORY_KEY) || "[]"
     );
 
-  if (Array.isArray(savedMemory)) {
-    memory = savedMemory;
+  if (Array.isArray(saved)) {
+    memory = saved;
   }
+
 } catch(e) {
+
   memory = [];
 }
 
+
+/* =========================================================
+   LOAD HISTORY
+   ========================================================= */
+
 try {
-  const savedHistory =
+
+  const saved =
     JSON.parse(
       localStorage.getItem(HISTORY_KEY) || "[]"
     );
 
-  if (Array.isArray(savedHistory)) {
-    history = savedHistory;
+  if (Array.isArray(saved)) {
+    history = saved;
   }
+
 } catch(e) {
+
   history = [];
 }
 
 
 /* =========================================================
-   UI
+   SAVE SETTINGS
    ========================================================= */
 
-function setStatus(text, type) {
+function saveSettings(){
 
-  statusEl.textContent = text;
-  statusEl.className = "status";
+  try {
 
-  if (type) {
+    localStorage.setItem(
+      SETTINGS_KEY,
+      JSON.stringify({
+        voiceEnabled,
+        wakeEnabled,
+        memoryEnabled
+      })
+    );
+
+  } catch(e) {}
+}
+
+
+/* =========================================================
+   UI STATUS
+   ========================================================= */
+
+function setStatus(text,type){
+
+  statusEl.textContent =
+    String(text || "تیار ہوں");
+
+  statusEl.className =
+    "status";
+
+  if(type){
     statusEl.classList.add(type);
   }
 }
 
 
-function addMessage(text, who) {
+/* =========================================================
+   MESSAGES
+   ========================================================= */
+
+function addMessage(text,who){
 
   const row =
     document.createElement("div");
@@ -373,31 +878,28 @@ function addMessage(text, who) {
   const bubble =
     document.createElement("div");
 
-  bubble.className = "bubble";
-  bubble.textContent = String(text);
+  bubble.className =
+    "bubble";
+
+  bubble.textContent =
+    String(text);
 
   row.appendChild(bubble);
+
   chat.appendChild(row);
 
   window.scrollTo({
-    top: document.body.scrollHeight,
-    behavior: "smooth"
+    top:document.body.scrollHeight,
+    behavior:"smooth"
   });
 }
 
 
-function saveMemory() {
+/* =========================================================
+   HISTORY
+   ========================================================= */
 
-  try {
-    localStorage.setItem(
-      MEMORY_KEY,
-      JSON.stringify(memory)
-    );
-  } catch(e) {}
-}
-
-
-function saveHistory() {
+function saveHistory(){
 
   try {
 
@@ -413,15 +915,75 @@ function saveHistory() {
 }
 
 
+function loadHistoryUI(){
+
+  if(!history.length){
+    return;
+  }
+
+  history.forEach(item => {
+
+    if(
+      item &&
+      item.role === "user" &&
+      item.content
+    ){
+
+      addMessage(
+        item.content,
+        "user"
+      );
+
+    }
+
+    if(
+      item &&
+      item.role === "assistant" &&
+      item.content
+    ){
+
+      addMessage(
+        item.content,
+        "ai"
+      );
+
+    }
+
+  });
+
+}
+
+
 /* =========================================================
-   LOCAL MEMORY
+   MEMORY
    ========================================================= */
 
-function remember(type, value) {
+function saveMemory(){
+
+  if(!memoryEnabled){
+    return;
+  }
+
+  try {
+
+    localStorage.setItem(
+      MEMORY_KEY,
+      JSON.stringify(memory)
+    );
+
+  } catch(e) {}
+}
+
+
+function remember(type,value){
+
+  if(!memoryEnabled){
+    return;
+  }
 
   memory.push({
-    type: String(type),
-    value: String(value)
+    type:String(type),
+    value:String(value)
   });
 
   memory =
@@ -431,35 +993,42 @@ function remember(type, value) {
 }
 
 
-function localCommand(text) {
+/* =========================================================
+   LOCAL COMMANDS
+   ========================================================= */
 
-  const t =
-    String(text)
-      .trim()
-      .toLowerCase();
+function localCommand(text){
+
+  const original =
+    String(text || "").trim();
+
+  const lower =
+    original.toLowerCase();
 
 
   /* NAME QUESTION */
 
-  if (
-    t.includes("میرا نام کیا ہے") ||
-    t.includes("mera naam kya hai") ||
-    t.includes("what is my name")
-  ) {
+  if(
+    lower.includes("میرا نام کیا ہے") ||
+    lower.includes("mera naam kya hai") ||
+    lower.includes("what is my name")
+  ){
 
     const found =
       memory.find(
-        item =>
-          item &&
-          item.type === "name"
+        x =>
+          x &&
+          x.type === "name"
       );
 
-    if (found) {
+    if(found){
+
       return (
         "آپ کا نام " +
         found.value +
         " ہے۔"
       );
+
     }
 
     return "مجھے ابھی آپ کا نام یاد نہیں ہے۔";
@@ -468,23 +1037,42 @@ function localCommand(text) {
 
   /* NAME SAVE */
 
-  const match =
-    String(text).match(
-      /(?:میرا نام|mera naam|my name is)\s*(?:ہے|is)?\s*([A-Za-z\u0600-\u06FF ]{2,40})/i
+  let match =
+    original.match(
+      /^میرا نام\s+(.+)$/i
     );
 
+  if(!match){
 
-  if (match) {
+    match =
+      original.match(
+        /^mera naam\s+(.+)$/i
+      );
+  }
+
+  if(!match){
+
+    match =
+      original.match(
+        /^my name is\s+(.+)$/i
+      );
+  }
+
+
+  if(match){
 
     const name =
       match[1]
         .trim()
-        .replace(/[۔.!؟?]+$/, "")
+        .replace(/[۔.!؟?]+$/,"")
         .trim();
 
-    if (name) {
+    if(name){
 
-      remember("name", name);
+      remember(
+        "name",
+        name
+      );
 
       return (
         "ٹھیک ہے، میں یاد رکھوں گا کہ آپ کا نام " +
@@ -502,136 +1090,173 @@ function localCommand(text) {
    SPEECH SYNTHESIS
    ========================================================= */
 
-let speaking = false;
+function stopSpeaking(){
 
+  try{
 
-function stopSpeaking() {
+    if(
+      "speechSynthesis" in window
+    ){
 
-  try {
-    window.speechSynthesis.cancel();
-  } catch(e) {}
+      window.speechSynthesis.cancel();
+
+    }
+
+  }catch(e){}
 
   speaking = false;
-  orb.classList.remove("speaking");
+
+  orb.classList.remove(
+    "speaking"
+  );
 }
 
 
-function speak(text) {
+function speak(text){
 
   return new Promise(resolve => {
 
-    if (!text) {
+    if(!voiceEnabled){
+
       resolve();
       return;
     }
+
+    if(!text){
+
+      resolve();
+      return;
+    }
+
+    if(
+      !("speechSynthesis" in window)
+    ){
+
+      console.log(
+        "Speech synthesis not supported"
+      );
+
+      resolve();
+      return;
+    }
+
 
     stopSpeaking();
 
-    if (
-      !("speechSynthesis" in window) ||
-      !("SpeechSynthesisUtterance" in window)
-    ) {
-      resolve();
-      return;
-    }
-
     speaking = true;
 
-    orb.classList.add("speaking");
+    orb.classList.add(
+      "speaking"
+    );
 
     setStatus(
       "بول رہا ہوں...",
       "speak"
     );
 
+
     const utterance =
       new SpeechSynthesisUtterance(
         String(text)
       );
 
-    utterance.lang = "ur-PK";
-    utterance.rate = 0.92;
-    utterance.pitch = 1;
-    utterance.volume = 1;
+    utterance.lang =
+      "ur-PK";
 
-    let finished = false;
+    utterance.rate =
+      0.92;
 
-    function finish() {
+    utterance.pitch =
+      1;
 
-      if (finished) return;
+    utterance.volume =
+      1;
 
-      finished = true;
+
+    let done = false;
+
+
+    function finish(){
+
+      if(done){
+        return;
+      }
+
+      done = true;
 
       speaking = false;
 
-      orb.classList.remove("speaking");
+      orb.classList.remove(
+        "speaking"
+      );
 
       resolve();
     }
 
-    utterance.onend = finish;
-    utterance.onerror = finish;
 
-    try {
+    utterance.onend =
+      finish;
+
+    utterance.onerror =
+      finish;
+
+
+    try{
 
       window.speechSynthesis.speak(
         utterance
       );
 
-    } catch(e) {
+    }catch(e){
 
       finish();
     }
 
-    /*
-      Safety fallback.
-      یہ صرف اس صورت میں کام کرے گا
-      جب browser onend نہ دے۔
-    */
 
     setTimeout(
       finish,
       Math.max(
         5000,
         Math.min(
-          20000,
-          String(text).length * 100
+          25000,
+          String(text).length * 110
         )
       )
     );
+
   });
 }
 
 
 /* =========================================================
-   AI CONNECTION
+   AI REQUEST
    ========================================================= */
 
-async function askAI(text) {
+async function askAI(text){
 
   text =
     String(text || "").trim();
 
-  if (!text) {
+  if(!text){
     return null;
   }
 
 
-  /* LOCAL COMMAND */
+  /* LOCAL */
 
   const local =
     localCommand(text);
 
-  if (local) {
+  if(local){
 
     history.push({
-      role: "user",
-      content: text
+      role:"user",
+      content:text
     });
 
     history.push({
-      role: "assistant",
-      content: local
+      role:"assistant",
+      content:local
     });
 
     saveHistory();
@@ -647,7 +1272,7 @@ async function askAI(text) {
   }
 
 
-  /* AI */
+  /* WORKER */
 
   setStatus(
     "AI سے رابطہ ہو رہا ہے...",
@@ -655,27 +1280,31 @@ async function askAI(text) {
   );
 
 
-  try {
+  try{
 
     const response =
       await fetch(
         WORKER_URL + "/chat",
         {
-          method: "POST",
+          method:"POST",
 
-          headers: {
+          headers:{
             "Content-Type":
               "application/json"
           },
 
-          body: JSON.stringify({
-            message: text,
+          body:JSON.stringify({
+
+            message:text,
 
             memory:
-              memory.slice(-12),
+              memoryEnabled
+                ? memory.slice(-12)
+                : [],
 
             history:
               history.slice(-20)
+
           })
         }
       );
@@ -684,25 +1313,31 @@ async function askAI(text) {
     const raw =
       await response.text();
 
+
     let data = {};
 
-    try {
+
+    try{
+
       data =
-        raw ? JSON.parse(raw) : {};
-    } catch(e) {
+        raw
+          ? JSON.parse(raw)
+          : {};
+
+    }catch(e){
 
       throw new Error(
-        "Worker نے درست JSON جواب نہیں دیا۔"
+        "Worker کا جواب JSON format میں نہیں ہے۔"
       );
     }
 
 
-    if (!response.ok) {
+    if(!response.ok){
 
       throw new Error(
         data.error ||
         (
-          "Worker Error: HTTP " +
+          "Worker Error HTTP " +
           response.status
         )
       );
@@ -711,11 +1346,14 @@ async function askAI(text) {
 
     const reply =
       String(
-        data.reply || ""
+        data.reply ||
+        data.response ||
+        data.message ||
+        ""
       ).trim();
 
 
-    if (!reply) {
+    if(!reply){
 
       throw new Error(
         "AI نے خالی جواب دیا۔"
@@ -723,22 +1361,18 @@ async function askAI(text) {
     }
 
 
-    /* SAVE HISTORY */
-
     history.push({
-      role: "user",
-      content: text
+      role:"user",
+      content:text
     });
 
     history.push({
-      role: "assistant",
-      content: reply
+      role:"assistant",
+      content:reply
     });
 
     saveHistory();
 
-
-    /* SHOW */
 
     addMessage(
       reply,
@@ -746,33 +1380,32 @@ async function askAI(text) {
     );
 
 
-    /* SPEAK */
-
     await speak(reply);
 
 
     return reply;
 
 
-  } catch(error) {
+  }catch(error){
 
     console.error(
-      "KAMRAN A1 AI ERROR:",
+      "KAMRAN A1 ERROR:",
       error
     );
 
 
-    const message =
+    const errorText =
       "AI سے رابطہ نہیں ہو سکا۔\n\n" +
-      String(
-        error && error.message
+      (
+        error &&
+        error.message
           ? error.message
-          : error
+          : String(error)
       );
 
 
     addMessage(
-      message,
+      errorText,
       "ai"
     );
 
@@ -789,49 +1422,58 @@ async function askAI(text) {
 
 
 /* =========================================================
-   TEXT SEND
+   SEND TEXT
    ========================================================= */
 
-let sending = false;
-
-
-async function sendText(text) {
+async function sendText(text){
 
   text =
     String(text || "").trim();
 
-  if (!text) {
+  if(!text){
     return;
   }
 
-  if (sending) {
+  if(sending){
     return;
   }
 
   sending = true;
 
-  sendBtn.disabled = true;
+  sendBtn.disabled =
+    true;
+
 
   addMessage(
     text,
     "user"
   );
 
-  textInput.value = "";
+
+  textInput.value =
+    "";
 
 
-  try {
+  try{
 
     await askAI(text);
 
-  } finally {
+  }finally{
 
-    sending = false;
+    sending =
+      false;
 
-    sendBtn.disabled = false;
+    sendBtn.disabled =
+      false;
 
-    if (!wakeEnabled && !speaking) {
-      setStatus("تیار ہوں");
+    if(
+      !wakeEnabled &&
+      !speaking
+    ){
+
+      setStatus(
+        "تیار ہوں"
+      );
     }
   }
 }
@@ -843,7 +1485,7 @@ async function sendText(text) {
 
 sendBtn.addEventListener(
   "click",
-  function() {
+  () => {
 
     sendText(
       textInput.value
@@ -854,14 +1496,14 @@ sendBtn.addEventListener(
 
 
 /* =========================================================
-   ENTER KEY
+   ENTER
    ========================================================= */
 
 textInput.addEventListener(
   "keydown",
-  function(event) {
+  event => {
 
-    if (event.key === "Enter") {
+    if(event.key === "Enter"){
 
       event.preventDefault();
 
@@ -883,84 +1525,48 @@ const SpeechRecognition =
   window.webkitSpeechRecognition;
 
 
-let recognition = null;
+function isWakeWord(text){
 
-let recognitionRunning = false;
-
-let recognitionMode = "idle";
-/*
-  idle
-  wake
-  command
-*/
-
-let wakeEnabled = false;
-
-let wakeTimer = null;
-
-let pendingCommand = "";
-
-let pendingWake = false;
-
-let processingCommand = false;
-
-let manualVoice = false;
-
-let returnToWake = false;
-
-
-/* =========================================================
-   JARVIS DETECTION
-   ========================================================= */
-
-function isJarvis(text) {
-
-  const original =
+  const t =
     String(text || "")
       .toLowerCase()
-      .trim();
+      .trim()
+      .replace(/[.,!?؟،۔]/g,"");
+
 
   const compact =
-    original
-      .replace(/\s+/g, "")
-      .replace(/[.,!?؟،۔]/g, "");
+    t.replace(/\s+/g,"");
 
 
-  const patterns = [
+  const words = [
 
-    "jarvis",
-    "jar viz",
-    "jar vis",
-    "jarwis",
-    "jarvish",
-    "jervis",
-    "jervish",
+    "kamran",
+    "kam ran",
+    "kamron",
+    "kam ron",
+    "kamraan",
+    "kam raan",
 
-    "جاروِس",
-    "جاروس",
-    "جارو س",
-    "جار وس",
-    "جارووس"
+    "کامران",
+    "کام ران",
+    "کامراں",
+    "کام راں"
 
   ];
 
 
-  for (const pattern of patterns) {
+  return words.some(word => {
 
     const p =
-      pattern.toLowerCase();
+      word
+        .toLowerCase()
+        .replace(/\s+/g,"");
 
-    if (
-      original.includes(p) ||
-      compact.includes(
-        p.replace(/\s+/g, "")
-      )
-    ) {
-      return true;
-    }
-  }
+    return (
+      compact.includes(p)
+    );
 
-  return false;
+  });
 }
 
 
@@ -968,12 +1574,12 @@ function isJarvis(text) {
    CREATE RECOGNITION
    ========================================================= */
 
-function createRecognition() {
+function createRecognition(){
 
-  if (!SpeechRecognition) {
+  if(!SpeechRecognition){
 
     setStatus(
-      "Browser Voice Recognition support نہیں کرتا",
+      "Voice Recognition supported نہیں",
       "error"
     );
 
@@ -985,58 +1591,66 @@ function createRecognition() {
     new SpeechRecognition();
 
 
-  r.interimResults = false;
-  r.maxAlternatives = 5;
-  r.continuous = false;
+  r.lang =
+    "ur-PK";
+
+  r.continuous =
+    false;
+
+  r.interimResults =
+    false;
+
+  r.maxAlternatives =
+    5;
 
 
-  /* START */
+  r.onstart =
+    function(){
 
-  r.onstart = function() {
+      recognitionRunning =
+        true;
 
-    recognitionRunning = true;
-
-    orb.classList.add("active");
-
-
-    if (recognitionMode === "wake") {
-
-      setStatus(
-        "Jarvis سن رہا ہے...",
-        "listen"
+      orb.classList.add(
+        "active"
       );
 
-    } else if (
-      recognitionMode === "command"
-    ) {
 
-      setStatus(
-        "میں سن رہا ہوں...",
-        "listen"
-      );
-    }
-  };
+      if(
+        recognitionMode === "wake"
+      ){
 
+        setStatus(
+          "Kamran سن رہا ہے...",
+          "listen"
+        );
 
-  /* RESULT */
+      }else{
+
+        setStatus(
+          "میں سن رہا ہوں...",
+          "listen"
+        );
+      }
+    };
+
 
   r.onresult =
-    function(event) {
+    async function(event){
 
-      let finalText = "";
+      let text = "";
 
 
-      for (
+      for(
         let i = event.resultIndex;
         i < event.results.length;
         i++
-      ) {
+      ){
 
-        if (
+        if(
           event.results[i].isFinal
-        ) {
+        ){
 
-          finalText +=
+          text +=
             event.results[i][0]
               .transcript
               .trim() +
@@ -1045,96 +1659,102 @@ function createRecognition() {
       }
 
 
-      finalText =
-        finalText.trim();
+      text =
+        text.trim();
 
 
-      if (!finalText) {
+      if(!text){
         return;
       }
 
 
       console.log(
         "KAMRAN A1 VOICE:",
-        finalText,
+        text,
         "MODE:",
         recognitionMode
       );
 
 
-      /* WAKE */
+      /* WAKE MODE */
 
-      if (
+      if(
         recognitionMode === "wake"
-      ) {
+      ){
 
-        if (
-          isJarvis(finalText)
-        ) {
+        if(
+          isWakeWord(text)
+        ){
 
-          pendingWake = true;
+          recognitionMode =
+            "command";
 
-          try {
+          try{
             r.stop();
-          } catch(e) {}
+          }catch(e){}
+
         }
 
         return;
       }
 
 
-      /* COMMAND */
+      /* COMMAND MODE */
 
-      if (
+      if(
         recognitionMode === "command"
-      ) {
+      ){
 
-        if (
-          processingCommand
-        ) {
+        if(processingCommand){
           return;
         }
 
-        pendingCommand =
-          finalText;
+        processingCommand =
+          true;
 
-        processingCommand = true;
-
-        try {
+        try{
           r.stop();
-        } catch(e) {}
+        }catch(e){}
+
+        await sendText(
+          text
+        );
       }
+
     };
 
 
-  /* ERROR */
-
   r.onerror =
-    function(event) {
+    function(event){
 
       console.log(
-        "KAMRAN A1 SPEECH ERROR:",
+        "Speech error:",
         event.error
       );
 
 
-      recognitionRunning = false;
+      recognitionRunning =
+        false;
 
-      orb.classList.remove("active");
+      orb.classList.remove(
+        "active"
+      );
 
 
-      if (
-        event.error ===
-          "not-allowed" ||
-        event.error ===
-          "service-not-allowed"
-      ) {
+      if(
+        event.error === "not-allowed" ||
+        event.error === "service-not-allowed"
+      ){
 
-        wakeEnabled = false;
+        wakeEnabled =
+          false;
 
-        updateWakeButton();
+        saveSettings();
 
-        recognitionMode = "idle";
+        updateWakeUI();
+
+        recognitionMode =
+          "idle";
 
         setStatus(
           "Microphone permission دیں",
@@ -1145,82 +1765,642 @@ function createRecognition() {
       }
 
 
-      if (
-        event.error ===
-          "aborted"
-      ) {
+      if(
+        event.error === "no-speech"
+      ){
+
+        if(
+          wakeEnabled &&
+          recognitionMode === "wake"
+        ){
+
+          setTimeout(
+            startWake,
+            500
+          );
+        }
+
         return;
       }
 
 
-      if (
-        recognitionMode === "wake" &&
-        wakeEnabled &&
-        !speaking &&
-        !processingCommand
-      ) {
+      if(
+        event.error === "aborted"
+      ){
 
-        scheduleWake();
+        return;
       }
 
 
-      if (
-        recognitionMode === "command" &&
+      if(
+        wakeEnabled &&
+        recognitionMode === "wake"
+      ){
+
+        setTimeout(
+          startWake,
+          700
+        );
+      }
+
+    };
+
+
+  r.onend =
+    function(){
+
+      recognitionRunning =
+        false;
+
+      orb.classList.remove(
+        "active"
+      );
+
+
+      /*
+        اگر Wake mode ہے اور user نے
+        اسے بند نہیں کیا تو دوبارہ سنیں۔
+      */
+
+      if(
+        wakeEnabled &&
+        recognitionMode === "wake" &&
+        !speaking &&
         !processingCommand
-      ) {
+      ){
 
-        recognitionMode = "idle";
+        setTimeout(
+          startWake,
+          500
+        );
 
-        if (returnToWake) {
+        return;
+      }
 
-          wakeEnabled = true;
 
-          updateWakeButton();
+      /*
+        Command مکمل ہو گئی۔
+      */
 
-          scheduleWake();
+      if(
+        recognitionMode === "command"
+      ){
 
-        } else {
+        processingCommand =
+          false;
+
+        recognitionMode =
+          "idle";
+
+
+        if(wakeEnabled){
+
+          setTimeout(
+            startWake,
+            700
+          );
+
+        }else{
 
           setStatus(
             "تیار ہوں"
           );
         }
       }
+
     };
 
 
-  /* END */
-
-  r.onend =
-    async function() {
-
-      recognitionRunning = false;
-
-      orb.classList.remove("active");
+  return r;
+}
 
 
-      /* JARVIS */
+/* =========================================================
+   START WAKE
+   ========================================================= */
 
-      if (pendingWake) {
+function startWake(){
 
-        pendingWake = false;
+  if(!wakeEnabled){
+    return;
+  }
 
-        recognitionMode = "idle";
+  if(speaking){
+    return;
+  }
 
-        await jarvisDetected();
+  if(
+    recognitionRunning
+  ){
+    return;
+  }
 
-        return;
-      }
+
+  if(!recognition){
+
+    recognition =
+      createRecognition();
+  }
 
 
-      /* COMMAND */
+  if(!recognition){
+    return;
+  }
 
-      if (
-        processingCommand &&
-        pendingCommand
-      ) {
 
-        const text =
-          pendingCommand;
+  recognitionMode =
+    "wake";
 
-        pendin
+
+  try{
+
+    recognition.start();
+
+  }catch(error){
+
+    console.log(
+      "Wake start:",
+      error
+    );
+
+    setTimeout(
+      () => {
+
+        if(wakeEnabled){
+          startWake();
+        }
+
+      },
+      1000
+    );
+  }
+}
+
+
+/* =========================================================
+   STOP RECOGNITION
+   ========================================================= */
+
+function stopRecognition(){
+
+  try{
+
+    if(recognition){
+
+      recognition.stop();
+    }
+
+  }catch(e){}
+
+  recognitionRunning =
+    false;
+
+  recognitionMode =
+    "idle";
+
+  processingCommand =
+    false;
+
+  orb.classList.remove(
+    "active"
+  );
+}
+
+
+/* =========================================================
+   WAKE UI
+   ========================================================= */
+
+function updateWakeUI(){
+
+  if(wakeEnabled){
+
+    wakeBtn.classList.add(
+      "on"
+    );
+
+    wakeBtn.textContent =
+      "🟢 Kamran Wake ON";
+
+    wakeSwitch.classList.add(
+      "on"
+    );
+
+  }else{
+
+    wakeBtn.classList.remove(
+      "on"
+    );
+
+    wakeBtn.textContent =
+      "🟢 Kamran Wake";
+
+    wakeSwitch.classList.remove(
+      "on"
+    );
+  }
+}
+
+
+/* =========================================================
+   ENABLE WAKE
+   ========================================================= */
+
+function enableWake(){
+
+  if(!SpeechRecognition){
+
+    setStatus(
+      "اس browser میں Voice Recognition نہیں ہے",
+      "error"
+    );
+
+    return;
+  }
+
+
+  wakeEnabled =
+    true;
+
+  saveSettings();
+
+  updateWakeUI();
+
+
+  /*
+    پہلے microphone permission حاصل کرنے
+    کے لیے recognition start کریں۔
+  */
+
+  stopRecognition();
+
+  setTimeout(
+    startWake,
+    300
+  );
+}
+
+
+/* =========================================================
+   DISABLE WAKE
+   ========================================================= */
+
+function disableWake(){
+
+  wakeEnabled =
+    false;
+
+  saveSettings();
+
+  stopRecognition();
+
+  updateWakeUI();
+
+  setStatus(
+    "تیار ہوں"
+  );
+}
+
+
+/* =========================================================
+   WAKE BUTTON
+   ========================================================= */
+
+wakeBtn.addEventListener(
+  "click",
+  function(){
+
+    if(wakeEnabled){
+
+      disableWake();
+
+    }else{
+
+      enableWake();
+    }
+
+  }
+);
+
+
+/* =========================================================
+   MANUAL VOICE
+   ========================================================= */
+
+voiceBtn.addEventListener(
+  "click",
+  function(){
+
+    if(!SpeechRecognition){
+
+      setStatus(
+        "Voice Recognition supported نہیں",
+        "error"
+      );
+
+      return;
+    }
+
+
+    /*
+      اگر Wake چل رہا ہے تو اسے temporarily
+      stop کریں۔
+    */
+
+    const wasWake =
+      wakeEnabled;
+
+
+    if(wasWake){
+
+      stopRecognition();
+    }
+
+
+    recognitionMode =
+      "command";
+
+    processingCommand =
+      false;
+
+
+    if(!recognition){
+
+      recognition =
+        createRecognition();
+    }
+
+
+    if(!recognition){
+      return;
+    }
+
+
+    try{
+
+      recognition.start();
+
+    }catch(error){
+
+      console.log(
+        "Manual voice:",
+        error
+      );
+
+    }
+
+  }
+);
+
+
+/* =========================================================
+   STOP BUTTON
+   ========================================================= */
+
+stopBtn.addEventListener(
+  "click",
+  function(){
+
+    wakeEnabled =
+      false;
+
+    saveSettings();
+
+    stopRecognition();
+
+    stopSpeaking();
+
+    updateWakeUI();
+
+    setStatus(
+      "روک دیا گیا"
+    );
+
+  }
+);
+
+
+/* =========================================================
+   SETTINGS
+   ========================================================= */
+
+function openSettings(){
+
+  settingsOverlay.classList.add(
+    "show"
+  );
+}
+
+
+function closeSettingsPanel(){
+
+  settingsOverlay.classList.remove(
+    "show"
+  );
+}
+
+
+settingsBtn.addEventListener(
+  "click",
+  openSettings
+);
+
+
+closeSettings.addEventListener(
+  "click",
+  closeSettingsPanel
+);
+
+
+settingsOverlay.addEventListener(
+  "click",
+  function(event){
+
+    if(
+      event.target ===
+      settingsOverlay
+    ){
+
+      closeSettingsPanel();
+    }
+
+  }
+);
+
+
+/* =========================================================
+   VOICE SWITCH
+   ========================================================= */
+
+voiceSwitch.addEventListener(
+  "click",
+  function(){
+
+    voiceEnabled =
+      !voiceEnabled;
+
+    saveSettings();
+
+    voiceSwitch.classList.toggle(
+      "on",
+      voiceEnabled
+    );
+
+    if(!voiceEnabled){
+
+      stopSpeaking();
+    }
+
+  }
+);
+
+
+/* =========================================================
+   WAKE SWITCH
+   ========================================================= */
+
+wakeSwitch.addEventListener(
+  "click",
+  function(){
+
+    if(wakeEnabled){
+
+      disableWake();
+
+    }else{
+
+      enableWake();
+    }
+
+  }
+);
+
+
+/* =========================================================
+   MEMORY SWITCH
+   ========================================================= */
+
+memorySwitch.addEventListener(
+  "click",
+  function(){
+
+    memoryEnabled =
+      !memoryEnabled;
+
+    saveSettings();
+
+    memorySwitch.classList.toggle(
+      "on",
+      memoryEnabled
+    );
+
+  }
+);
+
+
+/* =========================================================
+   CLEAR CHAT
+   ========================================================= */
+
+clearChat.addEventListener(
+  "click",
+  function(){
+
+    history = [];
+
+    try{
+
+      localStorage.removeItem(
+        HISTORY_KEY
+      );
+
+    }catch(e){}
+
+    chat.innerHTML =
+      "";
+
+    addMessage(
+      "Chat history صاف کر دی گئی ہے۔",
+      "ai"
+    );
+
+  }
+);
+
+
+/* =========================================================
+   CLEAR MEMORY
+   ========================================================= */
+
+clearMemory.addEventListener(
+  "click",
+  function(){
+
+    memory = [];
+
+    try{
+
+      localStorage.removeItem(
+        MEMORY_KEY
+      );
+
+    }catch(e){}
+
+    addMessage(
+      "میری local memory صاف کر دی گئی ہے۔",
+      "ai"
+    );
+
+  }
+);
+
+
+/* =========================================================
+   INITIAL UI
+   ========================================================= */
+
+voiceSwitch.classList.toggle(
+  "on",
+  voiceEnabled
+);
+
+memorySwitch.classList.toggle(
+  "on",
+  memoryEnabled
+);
+
+updateWakeUI();
+
+loadHistoryUI();
+
+
+/* =========================================================
+   START MESSAGE
+   ========================================================= */
+
+if(!history.length){
+
+  addMessage(
+    "السلام علیکم کامران! میں Kamran A1 ہوں۔ آپ مجھے لکھ کر یا Voice سے استعمال کر سکتے ہیں۔ Wake کے لیے \"Kamran\" بولیں۔",
+    "ai"
+  );
+
+}
+
+
+/* =========================================================
+   READY
+   ========================================================= */
+
+setStatus(
+  "تیار ہوں"
+);
+
+console.log(
+  "KAMRAN A1 READY"
+);
+
+</script>
+
+</body>
+</html>
