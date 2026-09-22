@@ -3,1260 +3,596 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-
 <title>Kamran A1</title>
 
 <style>
-*{box-sizing:border-box}
+*{
+  box-sizing:border-box;
+}
 
 body{
   margin:0;
-  font-family:Arial,sans-serif;
-  background:#080b12;
-  color:white;
+  font-family:Arial,"Noto Nastaliq Urdu",sans-serif;
+  background:#0b1020;
+  color:#fff;
+}
+
+.app{
+  max-width:800px;
+  margin:auto;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
 }
 
 header{
   padding:18px;
   text-align:center;
-  font-size:25px;
-  font-weight:bold;
-  border-bottom:1px solid #222;
+  background:#121a30;
+  border-bottom:1px solid #293451;
+}
+
+header h1{
+  margin:0;
+  font-size:28px;
 }
 
 #status{
-  text-align:center;
-  color:#8aa0b8;
-  padding:8px;
+  margin-top:8px;
+  color:#8bd5ff;
   font-size:14px;
 }
 
-#wakeStatus{
-  text-align:center;
-  color:#22c55e;
-  font-size:13px;
-  padding-bottom:6px;
-}
-
-#chat{
-  height:calc(100vh - 220px);
-  overflow-y:auto;
-  padding:15px;
-}
-
-.msg{
-  max-width:85%;
-  padding:12px 15px;
-  margin:10px 0;
-  border-radius:15px;
-  white-space:pre-wrap;
-  line-height:1.6;
-}
-
-.user{
-  background:#164e63;
-  margin-right:auto;
-}
-
-.bot{
-  background:#1e293b;
-  margin-left:auto;
-}
-
-.bottom{
-  position:fixed;
-  bottom:0;
-  left:0;
-  right:0;
-  padding:10px;
-  background:#0d111a;
+.controls{
   display:flex;
-  gap:6px;
-}
-
-input{
-  flex:1;
-  min-width:0;
-  padding:13px;
-  border-radius:12px;
-  border:1px solid #334155;
-  background:#111827;
-  color:white;
-  font-size:16px;
+  gap:10px;
+  padding:12px;
+  background:#10172a;
 }
 
 button{
+  flex:1;
   border:0;
   border-radius:12px;
-  padding:11px 13px;
-  background:#2563eb;
-  color:white;
+  padding:13px;
   font-size:16px;
   cursor:pointer;
+  color:white;
+  background:#2563eb;
 }
 
 button:active{
-  transform:scale(.96);
-}
-
-#mic{
-  background:#16a34a;
+  transform:scale(.98);
 }
 
 #wakeBtn{
-  background:#15803d;
+  background:#16a34a;
 }
 
-#settings{
-  position:fixed;
-  top:65px;
-  right:10px;
-  left:10px;
-  background:#111827;
-  border:1px solid #334155;
-  border-radius:15px;
+#stopBtn{
+  background:#dc2626;
+}
+
+#chat{
+  flex:1;
   padding:15px;
-  display:none;
-  z-index:100;
+  overflow-y:auto;
 }
 
-#settings h3{
-  margin-top:0;
+.msg{
+  margin:10px 0;
+  padding:12px 14px;
+  border-radius:14px;
+  line-height:1.7;
+  white-space:pre-wrap;
 }
 
-#settings input{
-  width:100%;
-  margin-bottom:10px;
+.user{
+  background:#1d4ed8;
+  margin-left:35px;
 }
 
-.smallBtn{
-  margin-top:5px;
-  background:#475569;
+.ai{
+  background:#1b263d;
+  margin-right:35px;
+}
+
+.inputArea{
+  display:flex;
+  gap:8px;
+  padding:12px;
+  background:#10172a;
+  border-top:1px solid #293451;
+}
+
+#textInput{
+  flex:1;
+  padding:13px;
+  border-radius:12px;
+  border:1px solid #3b4968;
+  background:#0b1020;
+  color:white;
+  font-size:16px;
+  outline:none;
+}
+
+#sendBtn{
+  flex:0 0 80px;
+}
+
+.small{
+  text-align:center;
+  color:#94a3b8;
+  font-size:12px;
+  padding:8px;
 }
 </style>
 </head>
 
 <body>
 
-<header>
-  Kamran A1 🤖
+<div class="app">
 
-  <button
-    onclick="toggleSettings()"
-    style="float:left;background:#334155;padding:7px 10px;"
-  >
-    ⚙️
-  </button>
+<header>
+  <h1>🤖 Kamran A1</h1>
+  <div id="status">🟢 تیار ہوں</div>
 </header>
 
-<div id="status">
-  تیار ہے
-</div>
-
-<div id="wakeStatus">
-  Wake Mode بند ہے
+<div class="controls">
+  <button id="wakeBtn">🎙️ Jarvis Wake</button>
+  <button id="stopBtn">⛔ Stop</button>
 </div>
 
 <div id="chat"></div>
 
-<div class="bottom">
-
+<div class="inputArea">
   <input
-    id="msg"
-    placeholder="اپنا پیغام لکھیں..."
+    id="textInput"
+    type="text"
+    placeholder="اپنا سوال لکھیں..."
     autocomplete="off"
   >
-
-  <button
-    id="wakeBtn"
-    onclick="toggleWakeMode()"
-  >
-    🟢 Wake
-  </button>
-
-  <button
-    id="mic"
-    onclick="startListening()"
-  >
-    🎙️
-  </button>
-
-  <button onclick="send()">
-    ➤
-  </button>
-
+  <button id="sendBtn">Send</button>
 </div>
 
-<div id="settings">
-
-  <h3>⚙️ Kamran A1 Settings</h3>
-
-  <label>Worker URL</label>
-
-  <input
-    id="workerUrl"
-    placeholder="https://your-worker.workers.dev"
-  >
-
-  <button onclick="saveSettings()">
-    💾 Save
-  </button>
-
-  <button
-    class="smallBtn"
-    onclick="clearMemory()"
-  >
-    🧠 Clear Memory
-  </button>
-
-  <button
-    class="smallBtn"
-    onclick="toggleSettings()"
-  >
-    بند کریں
-  </button>
+<div class="small">
+  Wake word: <b>Jarvis</b>
+</div>
 
 </div>
 
 <script>
+"use strict";
 
-/* =====================================================
-   SETTINGS / VARIABLES
-===================================================== */
+/* ================================
+   KAMRAN A1 CONFIG
+================================ */
 
 const WORKER_URL =
   "https://kamran1.jeekamran48.workers.dev";
 
-const workerKey =
-  "kamran_a1_worker";
+const MEMORY_KEY = "kamran_memory";
+const HISTORY_KEY = "kamran_history";
 
-const memoryKey =
-  "kamran_memory";
+/* ================================
+   ELEMENTS
+================================ */
 
-let mem = [];
+const statusEl = document.getElementById("status");
+const chatEl = document.getElementById("chat");
+const wakeBtn = document.getElementById("wakeBtn");
+const stopBtn = document.getElementById("stopBtn");
+const sendBtn = document.getElementById("sendBtn");
+const textInput = document.getElementById("textInput");
+
+/* ================================
+   MEMORY
+================================ */
+
+let memory = [];
+
+try {
+  memory = JSON.parse(
+    localStorage.getItem(MEMORY_KEY) || "[]"
+  );
+
+  if (!Array.isArray(memory)) {
+    memory = [];
+  }
+} catch(e) {
+  memory = [];
+}
+
 let history = [];
 
-try{
-
-  mem =
-    JSON.parse(
-      localStorage.getItem(memoryKey) || "[]"
-    );
-
-  if(!Array.isArray(mem)){
-    mem = [];
-  }
-
-}catch(e){
-
-  mem = [];
-}
-
-let recognition = null;
-let wakeRecognition = null;
-
-let listening = false;
-let wakeListening = false;
-
-let wakeMode = false;
-let processing = false;
-
-let voiceState = "idle";
-
-let wakeRestartTimer = null;
-let commandTimer = null;
-
-const chat =
-  document.getElementById("chat");
-
-const msg =
-  document.getElementById("msg");
-
-const status =
-  document.getElementById("status");
-
-const wakeStatus =
-  document.getElementById("wakeStatus");
-
-const workerUrl =
-  document.getElementById("workerUrl");
-
-const micButton =
-  document.getElementById("mic");
-
-const wakeButton =
-  document.getElementById("wakeBtn");
-
-
-/* =====================================================
-   WORKER URL
-===================================================== */
-
-if(!localStorage.getItem(workerKey)){
-
-  localStorage.setItem(
-    workerKey,
-    WORKER_URL
-  );
-}
-
-workerUrl.value =
-  localStorage.getItem(workerKey) ||
-  WORKER_URL;
-
-
-/* =====================================================
-   SETTINGS
-===================================================== */
-
-function toggleSettings(){
-
-  const box =
-    document.getElementById("settings");
-
-  box.style.display =
-    box.style.display === "block"
-      ? "none"
-      : "block";
-}
-
-
-function saveSettings(){
-
-  let url =
-    workerUrl.value.trim();
-
-  url =
-    url.replace(/\/+$/,"");
-
-  if(!url){
-
-    status.textContent =
-      "Worker URL خالی ہے۔";
-
-    return;
-  }
-
-  localStorage.setItem(
-    workerKey,
-    url
+try {
+  history = JSON.parse(
+    localStorage.getItem(HISTORY_KEY) || "[]"
   );
 
-  status.textContent =
-    "Worker URL محفوظ ہو گیا ✅";
-
-  setTimeout(function(){
-
-    if(!processing){
-      status.textContent =
-        "تیار ہے";
-    }
-
-  },1500);
+  if (!Array.isArray(history)) {
+    history = [];
+  }
+} catch(e) {
+  history = [];
 }
 
-
-/* =====================================================
-   MEMORY
-===================================================== */
+/* ================================
+   SAVE MEMORY
+================================ */
 
 function saveMemory(){
-
   try{
-
     localStorage.setItem(
-      memoryKey,
-      JSON.stringify(mem)
+      MEMORY_KEY,
+      JSON.stringify(memory.slice(-50))
     );
-
-  }catch(e){
-
-    console.log(e);
-  }
+  }catch(e){}
 }
 
-
-function clearMemory(){
-
-  mem = [];
-
-  saveMemory();
-
-  add(
-    "Memory صاف کر دی گئی ہے۔ 🧠",
-    "bot"
-  );
-
-  speak(
-    "Memory صاف کر دی گئی ہے۔"
-  );
+function saveHistory(){
+  try{
+    localStorage.setItem(
+      HISTORY_KEY,
+      JSON.stringify(history.slice(-40))
+    );
+  }catch(e){}
 }
 
+/* ================================
+   STATUS
+================================ */
 
-/* =====================================================
-   CHAT
-===================================================== */
+function setStatus(text){
+  statusEl.textContent = text;
+}
 
-function add(text,type){
+/* ================================
+   CHAT UI
+================================ */
 
-  const div =
-    document.createElement("div");
+function addMessage(text,type){
+  const div = document.createElement("div");
 
   div.className =
-    "msg " + type;
+    "msg " + (type === "user" ? "user" : "ai");
 
-  div.textContent =
-    String(text || "");
+  div.textContent = text;
 
-  chat.appendChild(div);
+  chatEl.appendChild(div);
 
-  chat.scrollTop =
-    chat.scrollHeight;
+  chatEl.scrollTop = chatEl.scrollHeight;
 }
 
+/* ================================
+   SPEECH SYNTHESIS
+================================ */
 
-/* =====================================================
-   CLEAN TEXT
-===================================================== */
+let speaking = false;
 
-function cleanText(text){
+function speak(text){
+  return new Promise(resolve => {
 
+    if (!("speechSynthesis" in window)) {
+      resolve();
+      return;
+    }
+
+    try{
+      window.speechSynthesis.cancel();
+
+      const utterance =
+        new SpeechSynthesisUtterance(text);
+
+      utterance.lang = "ur-PK";
+      utterance.rate = 0.95;
+      utterance.pitch = 1;
+
+      speaking = true;
+
+      utterance.onstart = () => {
+        setStatus("🔊 بول رہا ہوں...");
+      };
+
+      utterance.onend = () => {
+        speaking = false;
+        resolve();
+      };
+
+      utterance.onerror = () => {
+        speaking = false;
+        resolve();
+      };
+
+      window.speechSynthesis.speak(utterance);
+
+    }catch(e){
+      speaking = false;
+      resolve();
+    }
+  });
+}
+
+/* ================================
+   LOCAL COMMANDS / MEMORY
+================================ */
+
+function normalize(text){
   return String(text || "")
     .trim()
-    .replace(/[۔؟?.,،!！]/g,"")
-    .replace(/\s+/g," ");
+    .toLowerCase();
 }
 
+function localCommand(text){
 
-/* =====================================================
-   LOCAL MEMORY COMMANDS
-===================================================== */
+  const t = normalize(text);
 
-function localCommand(originalText){
+  /* NAME SAVE */
 
-  const text =
-    cleanText(originalText);
-
-  const lower =
-    text.toLowerCase();
-
-
-  /* NAME QUESTION */
-
-  if(
-    text.includes("میرا نام") &&
-    (
-      text.includes("کیا ہے") ||
-      text.includes("کون ہے") ||
-      text.includes("بتاؤ") ||
-      text.includes("بتاو") ||
-      text.includes("یاد ہے")
-    )
-  ){
-
-    const savedName =
-      mem.find(function(x){
-
-        return x &&
-          x.type === "name";
-      });
-
-    if(
-      savedName &&
-      savedName.value
-    ){
-
-      return {
-        reply:
-          "آپ کا نام " +
-          savedName.value +
-          " ہے۔",
-
-        handled:true
-      };
-    }
-
-    return {
-      reply:
-        "آپ کا نام ابھی Memory میں محفوظ نہیں ہے۔",
-
-      handled:true
-    };
-  }
-
-
-  /* ENGLISH NAME QUESTION */
-
-  if(
-    lower === "what is my name" ||
-    lower === "whats my name" ||
-    lower === "do you know my name"
-  ){
-
-    const savedName =
-      mem.find(function(x){
-
-        return x &&
-          x.type === "name";
-      });
-
-    if(
-      savedName &&
-      savedName.value
-    ){
-
-      return {
-        reply:
-          "Your name is " +
-          savedName.value +
-          ".",
-
-        handled:true
-      };
-    }
-
-    return {
-      reply:
-        "I don't have your name saved yet.",
-
-      handled:true
-    };
-  }
-
-
-  /* SAVE URDU NAME */
-
-  if(
-    text.startsWith("میرا نام ")
-  ){
-
-    let name = "";
-
-    let match =
-      text.match(
-        /^میرا نام\s+(.+?)\s+ہے$/i
-      );
-
-    if(match){
-      name =
-        match[1].trim();
-    }
-
-    if(!name){
-
-      match =
-        text.match(
-          /^میرا نام\s+(.+)$/i
-        );
-
-      if(match){
-        name =
-          match[1].trim();
-      }
-    }
-
-    name =
-      name
-        .replace(
-          /^(سیو کرلو|save کرلو|یاد رکھو|یاد کرلو)\s*/i,
-          ""
-        )
-        .replace(
-          /\s+ہے$/i,
-          ""
-        )
-        .trim();
-
-    if(
-      name &&
-      name !== "کیا ہے" &&
-      name !== "کون ہے" &&
-      name !== "بتاؤ" &&
-      name !== "بتاو"
-    ){
-
-      mem =
-        mem.filter(function(x){
-
-          return x.type !== "name";
-        });
-
-      mem.push({
-        type:"name",
-        value:name
-      });
-
-      saveMemory();
-
-      return {
-        reply:
-          "ٹھیک ہے، میں آپ کا نام یاد رکھوں گا: " +
-          name,
-
-        handled:true
-      };
-    }
-  }
-
-
-  /* SAVE ENGLISH NAME */
-
-  const englishName =
-    lower.match(
-      /^my name is\s+(.+)$/i
+  const nameMatch =
+    text.match(
+      /(?:میرا نام|میرا نام ہے|میرا نام یاد رکھو)\s*(?:ہے\s*)?(.+)/i
     );
 
-  if(englishName){
+  if(nameMatch){
 
     const name =
-      englishName[1].trim();
+      nameMatch[1]
+        .replace(/[۔.!?؟]+$/,"")
+        .trim();
 
     if(name){
 
-      mem =
-        mem.filter(function(x){
+      memory = memory.filter(
+        x => x.type !== "name"
+      );
 
-          return x.type !== "name";
-        });
-
-      mem.push({
+      memory.push({
         type:"name",
         value:name
       });
 
       saveMemory();
 
-      return {
-        reply:
-          "Okay, I will remember your name: " +
-          name,
-
-        handled:true
-      };
+      return "ٹھیک ہے، میں نے آپ کا نام یاد رکھ لیا ہے۔";
     }
   }
 
-
-  /* GENERAL MEMORY */
+  /* ASK NAME */
 
   if(
-    text.startsWith("یاد رکھو")
+    t.includes("میرا نام کیا ہے") ||
+    t.includes("what is my name") ||
+    t.includes("mera naam kya hai")
   ){
 
+    const item =
+      memory.find(x => x.type === "name");
+
+    if(item){
+      return "آپ کا نام " + item.value + " ہے۔";
+    }
+
+    return "آپ نے ابھی تک مجھے اپنا نام نہیں بتایا۔";
+  }
+
+  /* REMEMBER COMMAND */
+
+  const rememberMatch =
+    text.match(
+      /یاد رکھو\s+(.+)/i
+    );
+
+  if(rememberMatch){
+
     const value =
-      text
-        .replace(
-          /^یاد رکھو[:：]?\s*/,
-          ""
-        )
+      rememberMatch[1]
+        .replace(/[۔.!?؟]+$/,"")
         .trim();
 
     if(value){
 
-      mem.push({
+      memory.push({
         type:"note",
         value:value
       });
 
       saveMemory();
 
-      return {
-        reply:
-          "ٹھیک ہے، یہ بات Memory میں محفوظ کر لی ہے۔",
-
-        handled:true
-      };
+      return "ٹھیک ہے، میں نے یہ بات یاد رکھ لی ہے۔";
     }
   }
 
-
-  return {
-    handled:false
-  };
+  return null;
 }
 
+/* ================================
+   AI REQUEST
+================================ */
 
-/* =====================================================
-   AI
-===================================================== */
+async function askAI(text){
 
-async function ask(text){
+  const response = await fetch(
+    WORKER_URL + "/chat",
+    {
+      method:"POST",
 
-  const baseUrl =
-    (
-      localStorage.getItem(workerKey) ||
-      WORKER_URL
-    ).replace(/\/+$/,"");
+      headers:{
+        "Content-Type":"application/json"
+      },
 
-  if(!baseUrl){
+      body:JSON.stringify({
+        message:text,
 
-    throw new Error(
-      "Worker URL محفوظ نہیں ہے۔"
-    );
+        memory:
+          memory.slice(-12),
+
+        history:
+          history.slice(-20)
+      })
+    }
+  );
+
+  let data = {};
+
+  try{
+    data = await response.json();
+  }catch(e){
+    data = {};
   }
-
-  const response =
-    await fetch(
-      baseUrl + "/chat",
-      {
-        method:"POST",
-
-        headers:{
-          "Content-Type":
-            "application/json"
-        },
-
-        body:
-          JSON.stringify({
-
-            message:text,
-
-            memory:
-              mem.slice(-12),
-
-            history:
-              history.slice(-20)
-
-          })
-      }
-    );
-
-  const data =
-    await response
-      .json()
-      .catch(function(){
-        return {};
-      });
 
   if(!response.ok){
 
     throw new Error(
       data.error ||
-      "Server error " +
-      response.status
+      ("Worker HTTP " + response.status)
     );
   }
 
-  if(!data.reply){
+  if(
+    !data ||
+    typeof data.reply !== "string" ||
+    !data.reply.trim()
+  ){
 
     throw new Error(
       "Worker نے جواب نہیں دیا۔"
     );
   }
 
-  return String(
-    data.reply
-  );
+  return data.reply.trim();
 }
 
+/* ================================
+   SEND MESSAGE
+================================ */
 
-/* =====================================================
-   SPEECH
-===================================================== */
+let sending = false;
 
-function speak(text,done){
+async function sendMessage(text){
 
-  const speechText =
-    String(text || "").trim();
+  text = String(text || "").trim();
 
-  if(!speechText){
-
-    if(done){
-      done();
-    }
-
+  if(!text || sending){
     return;
   }
 
-  if(
-    !("speechSynthesis" in window)
-  ){
+  sending = true;
 
-    if(done){
-      done();
-    }
+  addMessage(text,"user");
 
-    return;
-  }
+  setStatus("🤔 سوچ رہا ہوں...");
 
-  try{
-    speechSynthesis.cancel();
-  }catch(e){}
-
-  voiceState =
-    "speaking";
-
-  status.textContent =
-    "🔊 بول رہا ہوں…";
-
-  const utter =
-    new SpeechSynthesisUtterance(
-      speechText
-    );
-
-  utter.lang =
-    "ur-PK";
-
-  utter.rate =
-    0.95;
-
-  utter.pitch =
-    1;
-
-  let finished = false;
-
-  function finish(){
-
-    if(finished){
-      return;
-    }
-
-    finished = true;
-
-    voiceState =
-      "idle";
-
-    if(done){
-
-      setTimeout(
-        done,
-        350
-      );
-    }
-  }
-
-  utter.onend =
-    finish;
-
-  utter.onerror =
-    finish;
-
-  speechSynthesis.speak(
-    utter
-  );
-}
-
-
-/* =====================================================
-   SEND
-===================================================== */
-
-async function send(){
-
-  const text =
-    msg.value.trim();
-
-  if(!text || processing){
-    return;
-  }
-
-  processing = true;
-
-  add(
-    text,
-    "user"
-  );
-
-  msg.value = "";
-
-  const local =
-    localCommand(text);
-
-  if(local.handled){
-
-    add(
-      local.reply,
-      "bot"
-    );
-
-    speak(
-      local.reply,
-      function(){
-
-        processing = false;
-
-        if(wakeMode){
-
-          afterSpeech();
-
-        }else{
-
-          status.textContent =
-            "تیار ہے";
-        }
-      }
-    );
-
-    return;
-  }
-
-
-  status.textContent =
-    "AI سوچ رہا ہے…";
-
+  let reply = null;
 
   try{
 
-    const reply =
-      await ask(text);
+    /* FIRST LOCAL COMMAND */
 
+    reply = localCommand(text);
+
+    /* OTHERWISE AI */
+
+    if(!reply){
+      reply = await askAI(text);
+    }
+
+    addMessage(reply,"ai");
 
     history.push({
       role:"user",
       content:text
     });
 
-
     history.push({
       role:"assistant",
       content:reply
     });
 
+    saveHistory();
 
-    history =
-      history.slice(-20);
+    setStatus("🟢 تیار ہوں");
 
-
-    add(
-      reply,
-      "bot"
-    );
-
-
-    speak(
-      reply,
-      function(){
-
-        processing = false;
-
-        if(wakeMode){
-
-          afterSpeech();
-
-        }else{
-
-          status.textContent =
-            "تیار ہے";
-        }
-      }
-    );
-
+    await speak(reply);
 
   }catch(error){
 
-    console.log(
-      "AI ERROR:",
-      error
-    );
+    console.error(error);
 
-    add(
+    const msg =
       "AI سے رابطہ نہیں ہو سکا۔ ⚠️\n" +
-      error.message,
-      "bot"
-    );
+      error.message;
 
-    processing = false;
+    addMessage(msg,"ai");
 
-    if(wakeMode){
+    setStatus("🔴 مسئلہ آیا");
 
-      voiceState =
-        "wake";
+  }finally{
 
-      status.textContent =
-        '👂 "Jarvis" سن رہا ہوں…';
+    sending = false;
 
-      scheduleWakeRestart(
-        1000
-      );
-
-    }else{
-
-      status.textContent =
-        "Connection check کریں";
+    if(!wakeRunning){
+      setStatus("🟢 تیار ہوں");
     }
   }
 }
 
+/* ================================
+   MANUAL SEND
+================================ */
 
-/* =====================================================
-   ENTER
-===================================================== */
+sendBtn.addEventListener(
+  "click",
+  () => {
 
-msg.addEventListener(
+    const text =
+      textInput.value.trim();
+
+    if(!text) return;
+
+    textInput.value = "";
+
+    sendMessage(text);
+  }
+);
+
+textInput.addEventListener(
   "keydown",
-  function(e){
+  event => {
 
-    if(e.key === "Enter"){
-
-      e.preventDefault();
-
-      send();
+    if(event.key === "Enter"){
+      event.preventDefault();
+      sendBtn.click();
     }
   }
 );
 
-
-/* =====================================================
-   SPEECH API
-===================================================== */
+/* ================================
+   SPEECH RECOGNITION
+================================ */
 
 const SpeechRecognition =
   window.SpeechRecognition ||
   window.webkitSpeechRecognition;
 
+let wakeRecognition = null;
+let commandRecognition = null;
 
-/* =====================================================
-   COMMAND RECOGNITION
-===================================================== */
+let wakeRunning = false;
+let commandRunning = false;
+let stopping = false;
 
-function createCommandRecognition(){
-
-  if(!SpeechRecognition){
-    return null;
-  }
-
-  const r =
-    new SpeechRecognition();
-
-  r.lang =
-    "ur-PK";
-
-  r.continuous =
-    false;
-
-  r.interimResults =
-    false;
-
-  r.maxAlternatives =
-    5;
-
-
-  r.onstart =
-    function(){
-
-      listening = true;
-
-      voiceState =
-        "command";
-
-      status.textContent =
-        "🎙️ سوال سن رہا ہوں…";
-
-      micButton.textContent =
-        "🔴";
-    };
-
-
-  r.onresult =
-    function(event){
-
-      let text = "";
-
-      for(
-        let i = event.resultIndex;
-        i < event.results.length;
-        i++
-      ){
-
-        if(
-          event.results[i].isFinal
-        ){
-
-          text +=
-            " " +
-            event.results[i][0]
-              .transcript;
-        }
-      }
-
-      text =
-        text.trim();
-
-      console.log(
-        "COMMAND:",
-        text
-      );
-
-      listening = false;
-
-      micButton.textContent =
-        "🎙️";
-
-
-      if(!text){
-
-        if(wakeMode){
-
-          afterSpeech();
-        }
-
-        return;
-      }
-
-
-      msg.value =
-        text;
-
-      send();
-    };
-
-
-  r.onerror =
-    function(event){
-
-      console.log(
-        "COMMAND ERROR:",
-        event.error
-      );
-
-      listening = false;
-
-      micButton.textContent =
-        "🎙️";
-
-
-      if(wakeMode){
-
-        voiceState =
-          "wake";
-
-        scheduleWakeRestart(
-          700
-        );
-
-      }else{
-
-        status.textContent =
-          "Voice دوبارہ try کریں۔";
-      }
-    };
-
-
-  r.onend =
-    function(){
-
-      listening = false;
-
-      micButton.textContent =
-        "🎙️";
-
-
-      if(
-        voiceState === "processing" ||
-        voiceState === "speaking"
-      ){
-
-        return;
-      }
-
-
-      if(wakeMode){
-
-        if(
-          !processing &&
-          voiceState === "command"
-        ){
-
-          scheduleWakeRestart(
-            500
-          );
-        }
-
-      }else{
-
-        status.textContent =
-          "تیار ہے";
-      }
-    };
-
-  return r;
-}
-
-
-if(SpeechRecognition){
-
-  recognition =
-    createCommandRecognition();
-}
-
-
-/* =====================================================
-   MANUAL MIC
-===================================================== */
-
-function startListening(){
-
-  if(!recognition){
-
-    alert(
-      "آپ کے browser میں Voice Recognition support نہیں ہے۔"
-    );
-
-    return;
-  }
-
-  if(processing){
-    return;
-  }
-
-
-  stopWakeRecognition();
-
-
-  try{
-    speechSynthesis.cancel();
-  }catch(e){}
-
-
-  voiceState =
-    "command";
-
-
-  status.textContent =
-    "🎙️ سن رہا ہوں…";
-
-
-  try{
-
-    recognition.start();
-
-  }catch(e){
-
-    console.log(
-      "Manual recognition:",
-      e
-    );
-  }
-}
-
-
-/* =====================================================
+/* ================================
    JARVIS DETECTION
-===================================================== */
-
-function normalizeWakeText(text){
-
-  return String(text || "")
-    .toLowerCase()
-    .replace(/[.,!?،۔؟]/g," ")
-    .replace(/\s+/g," ")
-    .trim();
-}
-
+================================ */
 
 function isJarvis(text){
 
   const t =
-    normalizeWakeText(text);
-
-  if(!t){
-    return false;
-  }
-
-
-  /*
-    صرف Jarvis کے variations
-  */
+    normalize(text)
+      .replace(/[.,!?؟،]/g," ")
+      .replace(/\s+/g," ")
+      .trim();
 
   const patterns = [
 
@@ -1271,585 +607,183 @@ function isJarvis(text){
     "جاروِس",
     "جاروس",
     "جارو س",
-    "جار وس"
-
+    "جار وس",
+    "جارس"
   ];
 
-
-  for(
-    const pattern of patterns
-  ){
-
-    if(
-      t.includes(pattern)
-    ){
-
-      return true;
-    }
-  }
-
-
-  const compact =
-    t.replace(/\s+/g,"");
-
-
-  return (
-    compact.includes("jarvis") ||
-    compact.includes("jarwis") ||
-    compact.includes("jervis") ||
-    compact.includes("جاروس") ||
-    compact.includes("جاروِس")
+  return patterns.some(
+    word => t.includes(word)
   );
 }
 
+/* ================================
+   START COMMAND LISTENER
+================================ */
 
-/* =====================================================
-   WAKE RECOGNITION
-===================================================== */
-
-function createWakeRecognition(){
+function startCommandListening(){
 
   if(!SpeechRecognition){
-    return null;
-  }
-
-  const r =
-    new SpeechRecognition();
-
-
-  /*
-    Jarvis English word ہے۔
-    اس لیے wake listener English رکھیں۔
-  */
-
-  r.lang =
-    "en-US";
-
-  r.continuous =
-    true;
-
-  r.interimResults =
-    false;
-
-  r.maxAlternatives =
-    5;
-
-
-  r.onstart =
-    function(){
-
-      wakeListening = true;
-
-      voiceState =
-        "wake";
-
-      status.textContent =
-        '👂 "Jarvis" سن رہا ہوں…';
-
-      wakeStatus.textContent =
-        '🟢 Wake Mode ON — صرف "Jarvis" کہیں';
-    };
-
-
-  r.onresult =
-    function(event){
-
-      for(
-        let i = event.resultIndex;
-        i < event.results.length;
-        i++
-      ){
-
-        if(
-          !event.results[i].isFinal
-        ){
-          continue;
-        }
-
-
-        const result =
-          event.results[i];
-
-
-        for(
-          let j = 0;
-          j < result.length;
-          j++
-        ){
-
-          const text =
-            result[j]
-              .transcript
-              .trim();
-
-
-          console.log(
-            "WAKE WORD:",
-            text
-          );
-
-
-          /*
-            یہاں صرف Jarvis check ہوگا۔
-            کوئی اور لفظ command نہیں بنے گا۔
-          */
-
-          if(
-            isJarvis(text)
-          ){
-
-            jarvisDetected();
-
-            return;
-          }
-        }
-      }
-    };
-
-
-  r.onerror =
-    function(event){
-
-      console.log(
-        "WAKE ERROR:",
-        event.error
-      );
-
-      wakeListening = false;
-
-
-      if(!wakeMode){
-        return;
-      }
-
-
-      if(
-        event.error === "not-allowed" ||
-        event.error === "service-not-allowed"
-      ){
-
-        wakeStatus.textContent =
-          "🔴 Microphone permission دیں";
-
-        status.textContent =
-          "Microphone Allow کریں۔";
-
-        return;
-      }
-
-
-      scheduleWakeRestart(
-        1000
-      );
-    };
-
-
-  r.onend =
-    function(){
-
-      wakeListening = false;
-
-
-      if(!wakeMode){
-        return;
-      }
-
-
-      if(
-        voiceState === "speaking" ||
-        voiceState === "command" ||
-        voiceState === "processing"
-      ){
-
-        return;
-      }
-
-
-      scheduleWakeRestart(
-        500
-      );
-    };
-
-
-  return r;
-}
-
-
-if(SpeechRecognition){
-
-  wakeRecognition =
-    createWakeRecognition();
-}
-
-
-/* =====================================================
-   JARVIS DETECTED
-===================================================== */
-
-function jarvisDetected(){
-
-  if(!wakeMode){
-    return;
-  }
-
-  if(processing){
-    return;
-  }
-
-
-  /*
-    Wake listener فوراً بند۔
-    تاکہ Jarvis دوبارہ command میں نہ جائے۔
-  */
-
-  stopWakeRecognition();
-
-
-  voiceState =
-    "speaking";
-
-
-  status.textContent =
-    "👋 Jarvis detected";
-
-
-  speak(
-    "جی، میں سن رہا ہوں۔",
-    function(){
-
-      if(!wakeMode){
-        return;
-      }
-
-      startCommandAfterJarvis();
-    }
-  );
-}
-
-
-/* =====================================================
-   COMMAND AFTER JARVIS
-===================================================== */
-
-function startCommandAfterJarvis(){
-
-  if(!wakeMode){
-    return;
-  }
-
-  if(!recognition){
-    return;
-  }
-
-
-  voiceState =
-    "command";
-
-
-  status.textContent =
-    "🎙️ جی، سوال بولیں…";
-
-
-  clearTimeout(
-    commandTimer
-  );
-
-
-  commandTimer =
-    setTimeout(
-      function(){
-
-        if(
-          !wakeMode ||
-          processing ||
-          listening
-        ){
-
-          return;
-        }
-
-
-        try{
-
-          recognition.start();
-
-        }catch(error){
-
-          console.log(
-            "COMMAND START ERROR:",
-            error
-          );
-
-
-          setTimeout(
-            function(){
-
-              if(
-                wakeMode &&
-                !processing &&
-                !listening
-              ){
-
-                try{
-
-                  recognition.start();
-
-                }catch(e){
-
-                  console.log(e);
-
-                  scheduleWakeRestart(
-                    700
-                  );
-                }
-              }
-
-            },
-            600
-          );
-        }
-
-      },
-      500
+    setStatus(
+      "⚠️ اس browser میں voice recognition موجود نہیں"
     );
-}
-
-
-/* =====================================================
-   AFTER AI SPEECH
-===================================================== */
-
-function afterSpeech(){
-
-  if(!wakeMode){
-
-    processing = false;
-
-    voiceState =
-      "idle";
-
-    status.textContent =
-      "تیار ہے";
-
     return;
   }
 
-
-  processing = false;
-
-  voiceState =
-    "wake";
-
-
-  status.textContent =
-    '👂 "Jarvis" سن رہا ہوں…';
-
-
-  wakeStatus.textContent =
-    '🟢 Wake Mode ON — صرف "Jarvis" کہیں';
-
-
-  scheduleWakeRestart(
-    600
-  );
-}
-
-
-/* =====================================================
-   WAKE TIMER
-===================================================== */
-
-function clearWakeRestart(){
-
-  if(wakeRestartTimer){
-
-    clearTimeout(
-      wakeRestartTimer
-    );
-
-    wakeRestartTimer = null;
-  }
-}
-
-
-function scheduleWakeRestart(delay){
-
-  clearWakeRestart();
-
-
-  if(!wakeMode){
+  if(stopping){
     return;
   }
 
-
-  wakeRestartTimer =
-    setTimeout(
-      function(){
-
-        wakeRestartTimer =
-          null;
-
-        startWakeRecognition();
-
-      },
-      delay
-    );
-}
-
-
-/* =====================================================
-   START WAKE
-===================================================== */
-
-function startWakeRecognition(){
-
-  if(!wakeMode){
+  if(commandRunning){
     return;
   }
-
-  if(!wakeRecognition){
-    return;
-  }
-
-
-  if(
-    wakeListening ||
-    listening ||
-    processing ||
-    voiceState === "speaking"
-  ){
-
-    return;
-  }
-
 
   try{
 
-    wakeRecognition.start();
+    commandRecognition =
+      new SpeechRecognition();
 
-  }catch(error){
+    commandRecognition.lang = "ur-PK";
+    commandRecognition.continuous = false;
+    commandRecognition.interimResults = false;
+    commandRecognition.maxAlternatives = 5;
 
-    console.log(
-      "WAKE START:",
-      error
-    );
+    commandRunning = true;
 
+    setStatus("🎤 میں سن رہا ہوں...");
 
-    wakeListening = false;
+    commandRecognition.onresult =
+      event => {
 
+        let text = "";
 
-    setTimeout(
-      function(){
-
-        if(
-          wakeMode &&
-          !wakeListening &&
-          !listening &&
-          !processing
+        for(
+          let i = event.resultIndex;
+          i < event.results.length;
+          i++
         ){
 
-          try{
+          if(
+            event.results[i].isFinal
+          ){
 
-            wakeRecognition.start();
-
-          }catch(e){
-
-            console.log(e);
+            text +=
+              event.results[i][0].transcript;
           }
         }
 
-      },
-      1000
-    );
+        text = text.trim();
+
+        if(text){
+
+          commandRunning = false;
+
+          try{
+            commandRecognition.stop();
+          }catch(e){}
+
+          sendMessage(text);
+        }
+      };
+
+    commandRecognition.onerror =
+      event => {
+
+        console.log(
+          "Command recognition:",
+          event.error
+        );
+
+        commandRunning = false;
+
+        if(!stopping && wakeRunning){
+          setStatus("👂 Jarvis سن رہا ہے...");
+        }
+      };
+
+    commandRecognition.onend =
+      () => {
+
+        commandRunning = false;
+
+        if(!stopping && wakeRunning){
+          setStatus("👂 Jarvis سن رہا ہے...");
+        }
+      };
+
+    commandRecognition.start();
+
+  }catch(error){
+
+    commandRunning = false;
+
+    console.log(error);
+
+    if(wakeRunning){
+      setStatus("👂 Jarvis سن رہا ہے...");
+    }
   }
 }
 
+/* ================================
+   JARVIS DETECTED
+================================ */
 
-/* =====================================================
-   STOP WAKE
-===================================================== */
+async function jarvisDetected(){
 
-function stopWakeRecognition(){
+  if(stopping){
+    return;
+  }
 
-  clearWakeRestart();
-
-  wakeListening = false;
-
+  /* stop wake listener */
 
   if(wakeRecognition){
 
     try{
-
       wakeRecognition.stop();
-
     }catch(e){}
   }
-}
 
+  wakeRunning = false;
 
-/* =====================================================
-   WAKE MODE
-===================================================== */
+  /* wake response */
 
-async function toggleWakeMode(){
+  setStatus("🟢 Jarvis فعال");
 
-  if(wakeMode){
+  await speak(
+    "جی، میں سن رہا ہوں۔"
+  );
 
-    wakeMode = false;
-
-    processing = false;
-
-    voiceState =
-      "idle";
-
-
-    stopWakeRecognition();
-
-
-    if(recognition){
-
-      try{
-
-        recognition.stop();
-
-      }catch(e){}
-    }
-
-
-    try{
-      speechSynthesis.cancel();
-    }catch(e){}
-
-
-    wakeButton.textContent =
-      "🟢 Wake";
-
-
-    wakeStatus.textContent =
-      "Wake Mode بند ہے";
-
-
-    status.textContent =
-      "تیار ہے";
-
-
+  if(stopping){
     return;
   }
 
+  /* now listen for command */
+
+  startCommandListening();
+}
+
+/* ================================
+   START WAKE MODE
+================================ */
+
+async function startWakeMode(){
 
   if(!SpeechRecognition){
 
     alert(
-      "آپ کے browser میں Voice Recognition موجود نہیں ہے۔"
+      "آپ کے browser میں Speech Recognition موجود نہیں ہے۔ Chrome استعمال کریں۔"
     );
 
     return;
   }
 
+  if(wakeRunning){
+    return;
+  }
 
-  /*
-    پہلے microphone permission
-  */
+  stopping = false;
+
+  /* microphone permission */
 
   try{
 
@@ -1863,81 +797,250 @@ async function toggleWakeMode(){
           audio:true
         });
 
-
-      stream
-        .getTracks()
-        .forEach(function(track){
-
-          track.stop();
-        });
+      stream.getTracks().forEach(
+        track => track.stop()
+      );
     }
 
   }catch(error){
 
-    console.log(
-      "MIC PERMISSION:",
-      error
+    alert(
+      "Microphone permission نہیں ملی۔ براہِ کرم microphone Allow کریں۔"
     );
-
-
-    wakeStatus.textContent =
-      "🔴 Microphone permission دیں";
-
-
-    status.textContent =
-      "Microphone Allow کریں۔";
-
 
     return;
   }
 
+  try{
 
-  wakeMode = true;
-
-  processing = false;
-
-  voiceState =
-    "wake";
-
-
-  wakeButton.textContent =
-    "🔴 Stop";
-
-
-  wakeStatus.textContent =
-    '🟢 Wake Mode ON — صرف "Jarvis" کہیں';
-
-
-  status.textContent =
-    '👂 "Jarvis" سن رہا ہوں…';
-
-
-  startWakeRecognition();
-}
-
-
-/* =====================================================
-   PAGE LOAD
-===================================================== */
-
-window.addEventListener(
-  "load",
-  function(){
-
-    status.textContent =
-      "تیار ہے";
-
-    wakeStatus.textContent =
-      "Wake Mode بند ہے";
+    wakeRecognition =
+      new SpeechRecognition();
 
     /*
-      Browser microphone کو page load پر
-      خود start کرنے کی اجازت نہ دے تو
-      Wake button ایک دفعہ دبانا پڑے گا۔
+      English recognition is used here because
+      Jarvis is an English wake word.
     */
 
+    wakeRecognition.lang = "en-US";
+
+    wakeRecognition.continuous = true;
+    wakeRecognition.interimResults = false;
+    wakeRecognition.maxAlternatives = 5;
+
+    wakeRecognition.onstart =
+      () => {
+
+        wakeRunning = true;
+
+        setStatus(
+          "👂 Jarvis سن رہا ہے..."
+        );
+      };
+
+    wakeRecognition.onresult =
+      event => {
+
+        for(
+          let i = event.resultIndex;
+          i < event.results.length;
+          i++
+        ){
+
+          if(
+            !event.results[i].isFinal
+          ){
+            continue;
+          }
+
+          let text =
+            event.results[i][0].transcript
+              .trim();
+
+          console.log(
+            "Wake heard:",
+            text
+          );
+
+          if(isJarvis(text)){
+
+            jarvisDetected();
+
+            return;
+          }
+        }
+      };
+
+    wakeRecognition.onerror =
+      event => {
+
+        console.log(
+          "Wake recognition error:",
+          event.error
+        );
+
+        /*
+          Some browsers automatically stop
+          recognition. We restart it below.
+        */
+
+        if(
+          event.error === "not-allowed" ||
+          event.error === "service-not-allowed"
+        ){
+
+          wakeRunning = false;
+
+          setStatus(
+            "⚠️ Microphone permission مسئلہ"
+          );
+
+          return;
+        }
+      };
+
+    wakeRecognition.onend =
+      () => {
+
+        wakeRunning = false;
+
+        if(
+          !stopping &&
+          !commandRunning
+        ){
+
+          setTimeout(
+            () => {
+
+              if(
+                !stopping &&
+                !wakeRunning
+              ){
+
+                try{
+                  wakeRecognition.start();
+                }catch(e){}
+              }
+
+            },
+            500
+          );
+        }
+      };
+
+    wakeRecognition.start();
+
+    setStatus(
+      "👂 Jarvis سن رہا ہے..."
+    );
+
+  }catch(error){
+
+    console.error(error);
+
+    wakeRunning = false;
+
+    setStatus(
+      "⚠️ Wake Mode شروع نہیں ہوا"
+    );
   }
+}
+
+/* ================================
+   STOP EVERYTHING
+================================ */
+
+function stopEverything(){
+
+  stopping = true;
+
+  wakeRunning = false;
+  commandRunning = false;
+
+  if(wakeRecognition){
+
+    try{
+      wakeRecognition.stop();
+    }catch(e){}
+  }
+
+  if(commandRecognition){
+
+    try{
+      commandRecognition.stop();
+    }catch(e){}
+  }
+
+  if("speechSynthesis" in window){
+
+    try{
+      speechSynthesis.cancel();
+    }catch(e){}
+  }
+
+  setStatus("⛔ سب بند ہے");
+}
+
+/* ================================
+   BUTTONS
+================================ */
+
+wakeBtn.addEventListener(
+  "click",
+  startWakeMode
 );
+
+stopBtn.addEventListener(
+  "click",
+  stopEverything
+);
+
+/* ================================
+   INITIAL CHAT
+================================ */
+
+if(history.length){
+
+  for(
+    const item of history.slice(-20)
+  ){
+
+    if(
+      item &&
+      item.role === "user" &&
+      item.content
+    ){
+
+      addMessage(
+        item.content,
+        "user"
+      );
+
+    }else if(
+      item &&
+      item.role === "assistant" &&
+      item.content
+    ){
+
+      addMessage(
+        item.content,
+        "ai"
+      );
+    }
+  }
+
+}else{
+
+  addMessage(
+    "السلام علیکم کامران! میں Kamran A1 ہوں۔\n\nآپ مجھے text سے سوال پوچھ سکتے ہیں یا اوپر سے Jarvis Wake آن کر سکتے ہیں۔",
+    "ai"
+  );
+}
+
+/* ================================
+   READY
+================================ */
+
+setStatus("🟢 تیار ہوں");
 
 </script>
 
